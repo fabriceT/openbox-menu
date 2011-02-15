@@ -1,0 +1,6 @@
+syntax: glob
+*.orig
+*.rej
+*~
+*.o
+*.so

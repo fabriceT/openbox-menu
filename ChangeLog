@@ -1,0 +1,52 @@
+2011-02-05  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.6
+ * Add -c switch to display application comment instead of name.
+ 
+
+2010-03-31  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.5
+ * Exec command is now in CDATA tag.
+
+
+2010-03-14  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.4
+ * Fix that stupid bug that prevent from launching CLI applications.
+
+
+2010-02-21  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.3
+ * Get rid off the -m flag, it was a stupid idea. Just add the menuname in the commandline.
+
+
+2010-02-20  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.2
+ * Less dumber filter (far from perfect but better. I think :/)
+ * Get rid off LXDE filter (as it's a default value)
+ * Use of startup notification flag.
+
+2010-02-19  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3.1
+ * Updated for libmenu-cache 3.x (use of notification/reload)
+
+2010-02-14  mimas  <mimasgpc@free.fr>
+
+ * Version 0.3
+ * New options. You can now filter various desktop specific entries (GNOME, KDE, LXDE, ROX & XFCE)
+ * You can define a terminal command to launch console applications (default is sakura -e).
+ * Code clean-up
+
+2009-08-02  mimas  <mimasgpc@free.fr>
+
+ * Version 0.2
+ * Add help message.
+ * Display an error message if no entries are found in menu.
+
+2009-10-20  mimas  <mimasgpc@free.fr>
+
+  *	First release.
