@@ -1,6 +1,5 @@
-//      menu.c
-//
-//      Copyright 2010-2011 mimas <mimasgpc@free.fr>
+//      openbox-menu - a dynamic menu for openbox
+//      Copyright (C) 2010,2011 mimas <mimasgpc@free.fr>
 //
 //      This program is free software; you can redistribute it and/or modify
 //      it under the terms of the GNU General Public License as published by
@@ -36,7 +35,6 @@ sanitize (const char *name)
 
 	GString *cmd = g_string_sized_new (256);
 
-	
 	for (;*name; ++name)
 	 {
 			switch(*name)
@@ -129,16 +127,16 @@ generate_menu (MenuCacheDir *dir)
 
 							use_terminal = menu_cache_app_get_use_terminal(MENU_CACHE_APP(l->data));
 							use_sn = menu_cache_app_get_use_sn(MENU_CACHE_APP(l->data));
-							if (comment_name) 
+							if (comment_name)
 								{
 									exec_name = sanitize(menu_cache_item_get_comment (MENU_CACHE_ITEM(l->data)));
 								}
-								
+
 							if (!comment_name || exec_name == NULL)
 								{
 									exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(l->data)));
 								}
-								
+
 							exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(l->data)));
 
 							printf("<item label=\"%s\"><action name=\"Execute\"><command>%s<![CDATA[%s %s]]></command></action></item>\n",
