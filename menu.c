@@ -190,14 +190,12 @@ main (int argc, char **argv)
 	gboolean show_xfce = FALSE;
 	gboolean show_rox = FALSE;
 	GOptionEntry entries[] = {
-		{ "comment",  'c', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &comment_name, "Display comment instead of application name", NULL },
-		{ "terminal", 't', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_STRING, &terminal_cmd, "Terminal command (default sakura -e)", "cmd" },
-		{ "gnome",    'g', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &show_gnome, "Display GNOME entries", NULL },
-		{ "kde",      'k', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &show_kde, "Display KDE entries", NULL },
-		// No need to show lxde entries as it's the default value (0).
-		// { "lxde",     'l', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &show_lxde, "Display LXDE entries", NULL },
-		{ "xfce",     'x', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &show_xfce, "Display XFCE entries", NULL },
-		{ "rox",      'r', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &show_rox, "Display ROX entries", NULL },
+		{ "comment",  'c', 0, G_OPTION_ARG_NONE, &comment_name, "Display comment instead of application name", NULL },
+		{ "terminal", 't', 0, G_OPTION_ARG_STRING, &terminal_cmd, "Terminal command (default sakura -e)", "cmd" },
+		{ "gnome",    'g', 0, G_OPTION_ARG_NONE, &show_gnome, "Display GNOME entries", NULL },
+		{ "kde",      'k', 0, G_OPTION_ARG_NONE, &show_kde, "Display KDE entries", NULL },
+		{ "xfce",     'x', 0, G_OPTION_ARG_NONE, &show_xfce, "Display XFCE entries", NULL },
+		{ "rox",      'r', 0, G_OPTION_ARG_NONE, &show_rox, "Display ROX entries", NULL },
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu, NULL, "[menu]" },
 		{NULL}
 	};
