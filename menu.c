@@ -20,7 +20,7 @@
 #include <glib/gi18n.h>
 #include <menu-cache.h>
 
-#define VERSION "0.3.6"
+#define VERSION "0.3.6.1"
 
 gchar *terminal_cmd = "sakura -e";
 guint32 show_flag = 0; // it was set to N_KNOWN_DESKTOPS (wrong value as it included KDE and GNOME).
