@@ -218,7 +218,7 @@ display_menu (MenuCache* menu, gpointer userdata)
 	dir = menu_cache_get_root_dir (menu);
 	if (dir == NULL)
 	{
-		g_error ("Can't get menu root dir");
+		g_warning ("Can't get menu root dir");
 		return;
 	}
 
@@ -291,7 +291,7 @@ main (int argc, char **argv)
 	menu_cache = menu_cache_lookup (app_menu?*app_menu:"applications.menu");
 	if (! menu_cache )
 	{
-		g_error ("Cannot connect to menu-cache :/");
+		g_warning ("Cannot connect to menu-cache :/");
 		return 1;
 	}
 
