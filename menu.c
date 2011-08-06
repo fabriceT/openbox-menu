@@ -39,25 +39,25 @@ sanitize (const char *name)
 	GString *cmd = g_string_sized_new (256);
 
 	for (;*name; ++name)
-	 {
-			switch(*name)
-				{
-				case '&':
-					g_string_append (cmd, "&amp;");
-					break;
-				case '<':
-					g_string_append (cmd, "&lt;");
-					break;
-				case '>':
-					g_string_append (cmd, "&gt;");
-					break;
-				case '"':
-					g_string_append (cmd, "&quote;");
-					break;
-				default:
-					g_string_append_c (cmd, *name);
-				}
+	{
+		switch(*name)
+		{
+			case '&':
+				g_string_append (cmd, "&amp;");
+				break;
+			case '<':
+				g_string_append (cmd, "&lt;");
+				break;
+			case '>':
+				g_string_append (cmd, "&gt;");
+				break;
+			case '"':
+				g_string_append (cmd, "&quote;");
+				break;
+			default:
+				g_string_append_c (cmd, *name);
 		}
+	}
 	return g_string_free (cmd, FALSE);
 }
 
@@ -78,12 +78,12 @@ clean_exec (const char* exec)
 	GString* cmd = g_string_sized_new (256);
 
 	for (;*exec; ++exec)
-		{
-			if (G_UNLIKELY(*exec == '%'))
-				break;
-			else
-				g_string_append_c (cmd, *exec);
-		}
+	{
+		if (G_UNLIKELY(*exec == '%'))
+			break;
+		else
+			g_string_append_c (cmd, *exec);
+	}
 	return g_string_free (cmd, FALSE);
 }
 
@@ -94,13 +94,9 @@ app_is_visible(MenuCacheApp *app, guint32 de_flag)
 	gint32 flags = menu_cache_app_get_show_flags (app);
 
 	if (flags < 0)
-		{
-			return !(- flags & de_flag);
-		}
+		return !(- flags & de_flag);
 	else
-		{
-			return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
-		}
+		return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
 }
 
 
@@ -118,20 +114,20 @@ openbox_menu_directory_start (MenuCacheApp *dir)
 		dir_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(dir)));
 
 	if (dir_icon == NULL || no_icon == TRUE)
-		{
-			printf("<menu id=\"openbox-%s\"\n"
-			       "      label=\"%s\">\n", dir_id, dir_name);
-		}
+	{
+		printf("<menu id=\"openbox-%s\"\n"
+		       "      label=\"%s\">\n", dir_id, dir_name);
+	}
 	else
-		{
-			printf ("<menu id=\"openbox-%s\"\n"
-			        "      label=\"%s\"\n"
-			        "      icon=\"%s\">\n",
-			        dir_id,
-			        dir_name,
-			        gtk_icon_info_get_filename (dir_icon));
-			gtk_icon_info_free (dir_icon);
-		}
+	{
+		printf ("<menu id=\"openbox-%s\"\n"
+		        "      label=\"%s\"\n"
+		        "      icon=\"%s\">\n",
+		        dir_id,
+		        dir_name,
+		        gtk_icon_info_get_filename (dir_icon));
+		gtk_icon_info_free (dir_icon);
+	}
 
 	g_free (dir_id);
 	g_free (dir_name);
@@ -162,30 +158,20 @@ openbox_menu_application (MenuCacheApp *app)
 	use_terminal = menu_cache_app_get_use_terminal(app);
 	//use_sn = menu_cache_app_get_use_sn(MENU_CACHE_APP(app));
 	if (comment_name)
-		{
-			exec_name = sanitize(menu_cache_item_get_comment (MENU_CACHE_ITEM(app)));
-		}
+		exec_name = sanitize(menu_cache_item_get_comment (MENU_CACHE_ITEM(app)));
 
 	if (!comment_name || exec_name == NULL)
-		{
-			exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
-		}
+		exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 
 	exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
 
 	if (!no_icon)
-		{
-			exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
-		}
+		exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
 
 	if (exec_icon == NULL || no_icon == TRUE)
-		{
-			printf("<item label=\"%s\">\n", exec_name);
-		}
+		printf("<item label=\"%s\">\n", exec_name);
 	else
-		{
-			printf("<item label=\"%s\" icon=\"%s\">\n", exec_name, gtk_icon_info_get_filename (exec_icon));
-		}
+		printf("<item label=\"%s\" icon=\"%s\">\n", exec_name, gtk_icon_info_get_filename (exec_icon));
 
 	printf("  <action name=\"Execute\"><command>\n"
 	       "    <![CDATA[%s %s]]>\n"
@@ -208,27 +194,23 @@ generate_menu (MenuCacheDir *dir)
 	GSList *l = NULL;
 
 	for (l = menu_cache_dir_get_children (dir); l; l = l->next)
+		switch ((guint) menu_cache_item_get_type (MENU_CACHE_ITEM(l->data)))
 		{
-			switch ((guint) menu_cache_item_get_type (MENU_CACHE_ITEM(l->data)))
-				{
-				case MENU_CACHE_TYPE_DIR:
-					openbox_menu_directory_start (l->data);
-					generate_menu(MENU_CACHE_DIR(l->data));
-					openbox_menu_directory_end ();
-					break;
+			case MENU_CACHE_TYPE_DIR:
+				openbox_menu_directory_start (l->data);
+				generate_menu(MENU_CACHE_DIR(l->data));
+				openbox_menu_directory_end ();
+				break;
 
-				case MENU_CACHE_TYPE_SEP:
-					openbox_menu_separator ();
-					break;
+			case MENU_CACHE_TYPE_SEP:
+				openbox_menu_separator ();
+				break;
 
-				case MENU_CACHE_TYPE_APP:
-					if (app_is_visible (MENU_CACHE_APP(l->data), show_flag))
-						{
-							openbox_menu_application (l->data);
-						}
+			case MENU_CACHE_TYPE_APP:
+				if (app_is_visible (MENU_CACHE_APP(l->data), show_flag))
+					openbox_menu_application (l->data);
 
-					break;
-				}
+				break;
 		}
 }
 
@@ -241,18 +223,16 @@ display_menu (MenuCache* menu, gpointer userdata)
 
 	dir = menu_cache_get_root_dir (menu);
 	if (dir == NULL)
-		{
-			g_error ("Can't get menu root dir");
-			return;
-		}
+	{
+		g_error ("Can't get menu root dir");
+		return;
+	}
 
 	// we get the number of entries found in menu
 	// No need to free the list, it's menu-cache internal.
 	l = menu_cache_dir_get_children (dir);
 	if (g_slist_length (l) != 0)
-		{
-			generate_menu(dir);
-		}
+		generate_menu(dir);
 	else
 		g_print ("<item label=\"No entries found, does your system provide a XDG menu?\"></item>");
 }
@@ -288,9 +268,7 @@ main (int argc, char **argv)
 	g_option_context_add_main_entries (context, entries, NULL);
 
 	if (!g_option_context_parse (context, &argc, &argv, NULL))
-		{
-			return 1;
-		}
+		return 1;
 
 	g_option_context_free (context);
 
@@ -307,11 +285,11 @@ main (int argc, char **argv)
 
 
 	if (!no_icon)
-		{
-			gtk_init (&argc, &argv);
-			gdk_init(&argc, &argv);
-			icon_theme = gtk_icon_theme_get_default ();
-		}
+	{
+		gtk_init (&argc, &argv);
+		gdk_init(&argc, &argv);
+		icon_theme = gtk_icon_theme_get_default ();
+	}
 
 	g_print ("<openbox_pipe_menu xmlns=\"http://openbox.org/\""
 	         "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
@@ -321,10 +299,10 @@ main (int argc, char **argv)
 	// This is annoying but Openbox doesn't seem to care about.
 	menu_cache = menu_cache_lookup (app_menu?*app_menu:"applications.menu");
 	if (! menu_cache )
-		{
-			g_error ("Cannot connect to menu-cache :/");
-			return 1;
-		}
+	{
+		g_error ("Cannot connect to menu-cache :/");
+		return 1;
+	}
 
 	reload_notify_id = menu_cache_add_reload_notify (menu_cache, (GFunc) display_menu, NULL);
 	menu_cache_reload (menu_cache);
