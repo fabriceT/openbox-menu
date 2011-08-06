@@ -234,7 +234,7 @@ display_menu (MenuCache* menu, gpointer userdata)
 	if (g_slist_length (l) != 0)
 		generate_menu(dir);
 	else
-		g_print ("<item label=\"No entries found, does your system provide a XDG menu?\"></item>");
+		g_print ("<item label=\"Menu not found. Please specify a menu specification file.\"></item>");
 }
 
 
