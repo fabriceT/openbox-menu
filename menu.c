@@ -149,14 +149,11 @@ static void
 openbox_menu_application (MenuCacheApp *app)
 {
 	gboolean use_terminal = FALSE;
-	// notification startup seems to be broken. It seems to throw some 'yes command' CPU hogs.
-	//gboolean use_sn = FALSE;
 	gchar *exec_cmd;
 	gchar *exec_name;
 	GtkIconInfo *exec_icon = NULL;
 
 	use_terminal = menu_cache_app_get_use_terminal(app);
-	//use_sn = menu_cache_app_get_use_sn(MENU_CACHE_APP(app));
 	if (comment_name)
 		exec_name = sanitize(menu_cache_item_get_comment (MENU_CACHE_ITEM(app)));
 
@@ -177,7 +174,6 @@ openbox_menu_application (MenuCacheApp *app)
 	       "    <![CDATA[%s %s]]>\n"
 	       "  </command></action>\n"
 	       "</item>\n",
-	       //(use_sn)?"<startupnotify><enabled>yes</enabled></startupnotify>":"",
 	       (use_terminal)?terminal_cmd:"",
 	       exec_cmd);
 
@@ -246,7 +242,6 @@ main (int argc, char **argv)
 	GOptionContext *context = NULL;
 	gboolean show_gnome = FALSE;
 	gboolean show_kde = FALSE;
-	//gboolean show_lxde = FALSE;
 	gboolean show_xfce = FALSE;
 	gboolean show_rox = FALSE;
 	GOptionEntry entries[] = {
@@ -276,8 +271,6 @@ main (int argc, char **argv)
 		show_flag |= SHOW_IN_GNOME;
 	if (show_kde)
 		show_flag |= SHOW_IN_KDE;
-	//if (show_lxde)
-	//	show_flag |= SHOW_IN_LXDE;
 	if (show_xfce)
 		show_flag |= SHOW_IN_XFCE;
 	if (show_rox)
