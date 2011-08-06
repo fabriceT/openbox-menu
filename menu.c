@@ -205,8 +205,6 @@ generate_menu (MenuCacheDir *dir)
 			case MENU_CACHE_TYPE_APP:
 				if (app_is_visible (MENU_CACHE_APP(l->data), show_flag))
 					openbox_menu_application (l->data);
-
-				break;
 		}
 }
 
