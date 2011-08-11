@@ -62,13 +62,45 @@ sanitize (const char *name)
 }
 
 
-GtkIconInfo *
+gchar *
 get_icon_path (const gchar* name)
 {
 	GtkIconInfo *icon_info;
-	icon_info  = gtk_icon_theme_lookup_icon ( icon_theme, name, 16, GTK_ICON_LOOKUP_NO_SVG);
+	gchar* icon = NULL;
+	gchar* tmp_name = NULL;
+	guint i;
+	
+	if (g_path_is_absolute (name))
+		return g_strdup (name);
+	
+	/*  We remove the file extension as gtk_icon_theme_lookup_icon can't 
+	 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
+	 */
+	for (i=strlen(name); i > 1; i--)
+	{
+			if (name[i] == '.')
+			{
+				tmp_name = strndup (name, i);
+				break;
+			}
+	}
+	
+	if (tmp_name)
+	{
+		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG);
+		g_free (tmp_name);
+	}
+	else
+		icon_info = gtk_icon_theme_lookup_icon ( icon_theme, name, 16, GTK_ICON_LOOKUP_NO_SVG);
+	
+	if (icon_info)
+	{
+		icon = g_strdup (gtk_icon_info_get_filename (icon_info));
+		gtk_icon_info_free (icon_info);
+		return icon;
+	}
 
-	return icon_info;
+	return NULL;
 }
 
 
@@ -92,7 +124,7 @@ static guint
 app_is_visible(MenuCacheApp *app, guint32 de_flag)
 {
 	gint32 flags = menu_cache_app_get_show_flags (app);
-
+	
 	if (flags < 0)
 		return !(- flags & de_flag);
 	else
@@ -105,15 +137,15 @@ openbox_menu_directory_start (MenuCacheApp *dir)
 {
 	gchar *dir_id;
 	gchar *dir_name;
-	GtkIconInfo *dir_icon = NULL;
+	gchar *dir_icon;
 
 	dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
 	dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
 
 	if (!no_icon)
 		dir_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(dir)));
-
-	if (dir_icon == NULL || no_icon == TRUE)
+	
+	if (no_icon == TRUE || dir_icon == NULL)
 	{
 		printf("<menu id=\"openbox-%s\"\n"
 		       "      label=\"%s\">\n", dir_id, dir_name);
@@ -122,11 +154,8 @@ openbox_menu_directory_start (MenuCacheApp *dir)
 	{
 		printf ("<menu id=\"openbox-%s\"\n"
 		        "      label=\"%s\"\n"
-		        "      icon=\"%s\">\n",
-		        dir_id,
-		        dir_name,
-		        gtk_icon_info_get_filename (dir_icon));
-		gtk_icon_info_free (dir_icon);
+		        "      icon=\"%s\">\n", dir_id, dir_name, dir_icon);
+		g_free (dir_icon);
 	}
 
 	g_free (dir_id);
@@ -151,7 +180,7 @@ openbox_menu_application (MenuCacheApp *app)
 	gboolean use_terminal = FALSE;
 	gchar *exec_cmd;
 	gchar *exec_name;
-	GtkIconInfo *exec_icon = NULL;
+	gchar *exec_icon = NULL;
 
 	use_terminal = menu_cache_app_get_use_terminal(app);
 	if (comment_name)
@@ -161,14 +190,17 @@ openbox_menu_application (MenuCacheApp *app)
 		exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 
 	exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
-
+	
 	if (!no_icon)
 		exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
 
-	if (exec_icon == NULL || no_icon == TRUE)
+	if (no_icon == TRUE || exec_icon == NULL)
 		printf("<item label=\"%s\">\n", exec_name);
 	else
-		printf("<item label=\"%s\" icon=\"%s\">\n", exec_name, gtk_icon_info_get_filename (exec_icon));
+	{
+		printf("<item label=\"%s\" icon=\"%s\">\n", exec_name, exec_icon);
+		g_free (exec_icon);
+	}
 
 	printf("  <action name=\"Execute\"><command>\n"
 	       "    <![CDATA[%s %s]]>\n"
@@ -176,9 +208,6 @@ openbox_menu_application (MenuCacheApp *app)
 	       "</item>\n",
 	       (use_terminal)?terminal_cmd:"",
 	       exec_cmd);
-
-	if (exec_icon)
-		gtk_icon_info_free (exec_icon);
 
 	g_free (exec_name);
 	g_free (exec_cmd);
