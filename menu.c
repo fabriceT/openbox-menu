@@ -69,14 +69,14 @@ get_icon_path (const gchar* name)
 	gchar* icon = NULL;
 	gchar* tmp_name = NULL;
 	guint i;
-	
+
 	if (g_path_is_absolute (name))
 		return g_strdup (name);
-	
-	/*  We remove the file extension as gtk_icon_theme_lookup_icon can't 
+
+	/*  We remove the file extension as gtk_icon_theme_lookup_icon can't
 	 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
 	 */
-	for (i=strlen(name); i > 1; i--)
+	for (i = strlen(name); i > 1; i--)
 	{
 			if (name[i] == '.')
 			{
@@ -84,7 +84,7 @@ get_icon_path (const gchar* name)
 				break;
 			}
 	}
-	
+
 	if (tmp_name)
 	{
 		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG);
@@ -92,7 +92,7 @@ get_icon_path (const gchar* name)
 	}
 	else
 		icon_info = gtk_icon_theme_lookup_icon ( icon_theme, name, 16, GTK_ICON_LOOKUP_NO_SVG);
-	
+
 	if (icon_info)
 	{
 		icon = g_strdup (gtk_icon_info_get_filename (icon_info));
@@ -124,7 +124,7 @@ static guint
 app_is_visible(MenuCacheApp *app, guint32 de_flag)
 {
 	gint32 flags = menu_cache_app_get_show_flags (app);
-	
+
 	if (flags < 0)
 		return !(- flags & de_flag);
 	else
@@ -135,16 +135,14 @@ app_is_visible(MenuCacheApp *app, guint32 de_flag)
 static void
 openbox_menu_directory_start (MenuCacheApp *dir)
 {
-	gchar *dir_id;
-	gchar *dir_name;
-	gchar *dir_icon;
+	gchar *dir_icon = NULL;
 
-	dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
-	dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
+	gchar *dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
+	gchar *dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
 
 	if (!no_icon)
 		dir_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(dir)));
-	
+
 	if (no_icon == TRUE || dir_icon == NULL)
 	{
 		printf("<menu id=\"openbox-%s\"\n"
@@ -190,7 +188,7 @@ openbox_menu_application (MenuCacheApp *app)
 		exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 
 	exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
-	
+
 	if (!no_icon)
 		exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
 
@@ -223,7 +221,7 @@ generate_menu (MenuCacheDir *dir)
 		{
 			case MENU_CACHE_TYPE_DIR:
 				openbox_menu_directory_start (l->data);
-				generate_menu(MENU_CACHE_DIR(l->data));
+				generate_menu (MENU_CACHE_DIR(l->data));
 				openbox_menu_directory_end ();
 				break;
 
@@ -241,10 +239,7 @@ generate_menu (MenuCacheDir *dir)
 static void
 display_menu (MenuCache* menu, gpointer userdata)
 {
-	GSList *l = NULL;
-	MenuCacheDir *dir = NULL;
-
-	dir = menu_cache_get_root_dir (menu);
+	MenuCacheDir * dir = menu_cache_get_root_dir (menu);
 	if (dir == NULL)
 	{
 		g_warning ("Can't get menu root dir");
@@ -253,7 +248,7 @@ display_menu (MenuCache* menu, gpointer userdata)
 
 	// we get the number of entries found in menu
 	// No need to free the list, it's menu-cache internal.
-	l = menu_cache_dir_get_children (dir);
+	GSList *l = menu_cache_dir_get_children (dir);
 	if (g_slist_length (l) != 0)
 		generate_menu(dir);
 	else
@@ -317,7 +312,7 @@ main (int argc, char **argv)
 	         "  file:///usr/share/openbox/menu.xsd\">\n");
 	// menu_cache_lookup displays a log message to stdout.
 	// This is annoying but Openbox doesn't seem to care about.
-	menu_cache = menu_cache_lookup (app_menu?*app_menu:"applications.menu");
+	menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
 	if (! menu_cache )
 	{
 		g_warning ("Cannot connect to menu-cache :/");
