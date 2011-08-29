@@ -21,7 +21,7 @@
 #include <glib/gi18n.h>
 #include <menu-cache.h>
 
-#define VERSION "0.3.6.3"
+#include "openbox-menu.h"
 
 gchar *terminal_cmd = "sakura -e";
 guint32 show_flag = 0; // it was set to N_KNOWN_DESKTOPS (wrong value as it included KDE and GNOME).
@@ -29,6 +29,7 @@ gpointer reload_notify_id = NULL;
 gboolean comment_name = FALSE;
 gboolean no_icon = FALSE;
 GtkIconTheme* icon_theme = NULL;
+
 
 // Convert &,<,> and " to html entities
 char *
@@ -59,6 +60,35 @@ sanitize (const char *name)
 		}
 	}
 	return g_string_free (cmd, FALSE);
+}
+
+
+// return all the string content before %
+char *
+clean_exec (const char* exec)
+{
+	GString* cmd = g_string_sized_new (256);
+
+	for (;*exec; ++exec)
+	{
+		if (G_UNLIKELY(*exec == '%'))
+			break;
+		else
+			g_string_append_c (cmd, *exec);
+	}
+	return g_string_free (cmd, FALSE);
+}
+
+
+guint
+app_is_visible(MenuCacheApp *app, guint32 de_flag)
+{
+	gint32 flags = menu_cache_app_get_show_flags (app);
+
+	if (flags < 0)
+		return !(- flags & de_flag);
+	else
+		return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
 }
 
 
@@ -104,143 +134,11 @@ get_icon_path (const gchar* name)
 }
 
 
-char *
-clean_exec (const char* exec)
-{
-	GString* cmd = g_string_sized_new (256);
-
-	for (;*exec; ++exec)
-	{
-		if (G_UNLIKELY(*exec == '%'))
-			break;
-		else
-			g_string_append_c (cmd, *exec);
-	}
-	return g_string_free (cmd, FALSE);
-}
-
-
-static guint
-app_is_visible(MenuCacheApp *app, guint32 de_flag)
-{
-	gint32 flags = menu_cache_app_get_show_flags (app);
-
-	if (flags < 0)
-		return !(- flags & de_flag);
-	else
-		return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
-}
-
-
-static void
-openbox_menu_directory_start (MenuCacheApp *dir)
-{
-	gchar *dir_icon = NULL;
-
-	gchar *dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
-	gchar *dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
-
-	if (!no_icon)
-		dir_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(dir)));
-
-	if (no_icon == TRUE || dir_icon == NULL)
-	{
-		printf("<menu id=\"openbox-%s\"\n"
-		       "      label=\"%s\">\n", dir_id, dir_name);
-	}
-	else
-	{
-		printf ("<menu id=\"openbox-%s\"\n"
-		        "      label=\"%s\"\n"
-		        "      icon=\"%s\">\n", dir_id, dir_name, dir_icon);
-		g_free (dir_icon);
-	}
-
-	g_free (dir_id);
-	g_free (dir_name);
-}
-
-static void
-openbox_menu_directory_end (void)
-{
-	printf ("</menu>\n");
-}
-
-static void
-openbox_menu_separator (void)
-{
-	printf ("<separator />\n");
-}
-
-static void
-openbox_menu_application (MenuCacheApp *app)
-{
-	gboolean use_terminal = FALSE;
-	gchar *exec_cmd;
-	gchar *exec_name;
-	gchar *exec_icon = NULL;
-
-	use_terminal = menu_cache_app_get_use_terminal(app);
-	if (comment_name)
-		exec_name = sanitize(menu_cache_item_get_comment (MENU_CACHE_ITEM(app)));
-
-	if (!comment_name || exec_name == NULL)
-		exec_name = sanitize(menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
-
-	exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
-
-	if (!no_icon)
-		exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
-
-	if (no_icon == TRUE || exec_icon == NULL)
-		printf("<item label=\"%s\">\n", exec_name);
-	else
-	{
-		printf("<item label=\"%s\" icon=\"%s\">\n", exec_name, exec_icon);
-		g_free (exec_icon);
-	}
-
-	printf("  <action name=\"Execute\"><command>\n"
-	       "    <![CDATA[%s %s]]>\n"
-	       "  </command></action>\n"
-	       "</item>\n",
-	       (use_terminal)?terminal_cmd:"",
-	       exec_cmd);
-
-	g_free (exec_name);
-	g_free (exec_cmd);
-}
-
-void
-generate_menu (MenuCacheDir *dir)
-{
-	GSList *l = NULL;
-
-	for (l = menu_cache_dir_get_children (dir); l; l = l->next)
-		switch ((guint) menu_cache_item_get_type (MENU_CACHE_ITEM(l->data)))
-		{
-			case MENU_CACHE_TYPE_DIR:
-				openbox_menu_directory_start (l->data);
-				generate_menu (MENU_CACHE_DIR(l->data));
-				openbox_menu_directory_end ();
-				break;
-
-			case MENU_CACHE_TYPE_SEP:
-				openbox_menu_separator ();
-				break;
-
-			case MENU_CACHE_TYPE_APP:
-				if (app_is_visible (MENU_CACHE_APP(l->data), show_flag))
-					openbox_menu_application (l->data);
-		}
-}
-
-
 static void
 display_menu (MenuCache* menu, gpointer userdata)
 {
 	MenuCacheDir * dir = menu_cache_get_root_dir (menu);
-	if (dir == NULL)
+	if (G_UNLIKELY(dir == NULL))
 	{
 		g_warning ("Can't get menu root dir");
 		return;
@@ -250,7 +148,7 @@ display_menu (MenuCache* menu, gpointer userdata)
 	// No need to free the list, it's menu-cache internal.
 	GSList *l = menu_cache_dir_get_children (dir);
 	if (g_slist_length (l) != 0)
-		generate_menu(dir);
+		generate_openbox_menu(dir);
 	else
 		g_print ("<item label=\"Menu not found. Please specify a menu specification file.\"></item>");
 }
@@ -259,7 +157,6 @@ display_menu (MenuCache* menu, gpointer userdata)
 int
 main (int argc, char **argv)
 {
-	MenuCache *menu_cache;
 	gchar **app_menu = NULL; //"applications.menu";
 	GOptionContext *context = NULL;
 	gboolean show_gnome = FALSE;
@@ -310,9 +207,7 @@ main (int argc, char **argv)
 	         "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 	         "  xsi:schemaLocation=\"http://openbox.org/"
 	         "  file:///usr/share/openbox/menu.xsd\">\n");
-	// menu_cache_lookup displays a log message to stdout.
-	// This is annoying but Openbox doesn't seem to care about.
-	menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
+	MenuCache *menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
 	if (! menu_cache )
 	{
 		g_warning ("Cannot connect to menu-cache :/");
