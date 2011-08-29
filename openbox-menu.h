@@ -17,7 +17,7 @@
  *      MA 02110-1301, USA.
  */
 
-#define VERSION "0.3.6.3"
+#define VERSION "0.3.6.4"
 
 // menu.c
 guint app_is_visible(MenuCacheApp *, guint32);
