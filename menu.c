@@ -23,7 +23,7 @@
 
 #include "openbox-menu.h"
 
-gchar *terminal_cmd = "sakura -e";
+gchar *terminal_cmd = "xterm -e";
 guint32 show_flag = 0; // it was set to N_KNOWN_DESKTOPS (wrong value as it included KDE and GNOME).
 gpointer reload_notify_id = NULL;
 gboolean comment_name = FALSE;
