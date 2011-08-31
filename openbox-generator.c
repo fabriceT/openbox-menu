@@ -33,10 +33,7 @@ menu_directory (MenuCacheApp *dir)
 	gchar *dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
 	gchar *dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
 
-	if (!no_icon)
-		dir_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(dir)));
-
-	if (no_icon == TRUE || dir_icon == NULL)
+	if (no_icon == TRUE || (dir_icon = get_item_icon_path (MENU_CACHE_ITEM(dir))) == NULL)
 	{
 		g_print ("<menu id=\"openbox-%s\"\n"
 		         "      label=\"%s\">\n", dir_id, dir_name);
@@ -69,10 +66,7 @@ menu_application (MenuCacheApp *app)
 
 	gchar *exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
 
-	if (!no_icon)
-		exec_icon = get_icon_path (menu_cache_item_get_icon (MENU_CACHE_ITEM(app)));
-
-	if (no_icon == TRUE || exec_icon == NULL)
+	if (no_icon == TRUE || (exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app))) == NULL)
 		g_print ("<item label=\"%s\">\n", exec_name);
 	else
 	{

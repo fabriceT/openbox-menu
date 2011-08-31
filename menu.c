@@ -93,12 +93,15 @@ app_is_visible(MenuCacheApp *app, guint32 de_flag)
 
 
 gchar *
-get_icon_path (const gchar* name)
+get_item_icon_path (MenuCacheItem* item)
 {
 	GtkIconInfo *icon_info;
 	gchar* icon = NULL;
 	gchar* tmp_name = NULL;
 	guint i;
+
+	const gchar* name = menu_cache_item_get_icon (MENU_CACHE_ITEM(item));
+	g_return_val_if_fail (name != NULL, NULL);
 
 	if (g_path_is_absolute (name))
 		return g_strdup (name);
