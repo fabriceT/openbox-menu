@@ -71,8 +71,24 @@ clean_exec (const char* exec)
 
 	for (;*exec; ++exec)
 	{
-		if G_UNLIKELY(*exec == '%' || *exec == '"')
-			break;
+		if G_UNLIKELY(*exec == '%')
+		{
+			++exec;
+			switch (*exec)
+			{
+				case 'f':
+				case 'F':
+				case 'u':
+				case 'U':
+				case 'i':
+				case 'c':
+				case 'k':
+					break;
+				default: // not a freedesktop Exec field code
+					g_string_append_c (cmd, '%');
+					g_string_append_c (cmd, *exec);
+			}
+		}	
 		else
 			g_string_append_c (cmd, *exec);
 	}
