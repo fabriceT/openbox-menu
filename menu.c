@@ -71,7 +71,7 @@ clean_exec (const char* exec)
 
 	for (;*exec; ++exec)
 	{
-		if (G_UNLIKELY(*exec == '%'))
+		if G_UNLIKELY(*exec == '%' || *exec == '"')
 			break;
 		else
 			g_string_append_c (cmd, *exec);
