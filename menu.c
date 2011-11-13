@@ -126,7 +126,7 @@ get_item_icon_path (MenuCacheItem* item)
 	 */ 
 	tmp_name = strndup (name, strrchr (name, '.') - name);
 
-	icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG);
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);
 	g_free (tmp_name);
 
 	if (icon_info)
