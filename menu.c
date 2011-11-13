@@ -63,7 +63,7 @@ sanitize (const char *name)
 }
 
 
-// return all the string content before %
+// Remove %f,%F,%u,%U,%i,%c,%k from Exec field.
 char *
 clean_exec (const char* exec)
 {
