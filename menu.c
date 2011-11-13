@@ -114,7 +114,6 @@ get_item_icon_path (MenuCacheItem* item)
 	GtkIconInfo *icon_info;
 	gchar* icon = NULL;
 	gchar* tmp_name = NULL;
-	guint i;
 
 	const gchar* name = menu_cache_item_get_icon (MENU_CACHE_ITEM(item));
 	g_return_val_if_fail (name != NULL, NULL);
@@ -124,23 +123,11 @@ get_item_icon_path (MenuCacheItem* item)
 
 	/*  We remove the file extension as gtk_icon_theme_lookup_icon can't
 	 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
-	 */
-	for (i = strlen(name); i > 1; i--)
-	{
-			if (name[i] == '.')
-			{
-				tmp_name = strndup (name, i);
-				break;
-			}
-	}
+	 */ 
+	tmp_name = strndup (name, strrchr (name, '.') - name);
 
-	if (tmp_name)
-	{
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG);
-		g_free (tmp_name);
-	}
-	else
-		icon_info = gtk_icon_theme_lookup_icon ( icon_theme, name, 16, GTK_ICON_LOOKUP_NO_SVG);
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG);
+	g_free (tmp_name);
 
 	if (icon_info)
 	{
