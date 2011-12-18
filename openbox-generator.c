@@ -28,11 +28,11 @@ extern gchar *terminal_cmd;
 static void
 menu_directory (MenuCacheApp *dir)
 {
-	gchar *dir_icon = NULL;
-
 	gchar *dir_id = sanitize (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
 	gchar *dir_name = sanitize (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
 
+#ifdef CAN_I_HAZ_ICONS
+	gchar *dir_icon = NULL;
 	if (no_icon == TRUE || (dir_icon = get_item_icon_path (MENU_CACHE_ITEM(dir))) == NULL)
 	{
 		g_print ("<menu id=\"openbox-%s\"\n"
@@ -45,7 +45,10 @@ menu_directory (MenuCacheApp *dir)
 		         "      icon=\"%s\">\n", dir_id, dir_name, dir_icon);
 		g_free (dir_icon);
 	}
-
+#else
+	g_print ("<menu id=\"openbox-%s\"\n"
+	         "      label=\"%s\"\n", dir_id, dir_name); 
+#endif
 	g_free (dir_id);
 	g_free (dir_name);
 }
@@ -55,7 +58,7 @@ static void
 menu_application (MenuCacheApp *app)
 {
 	gchar *exec_name = NULL;
-	gchar *exec_icon = NULL;
+
 	gboolean use_terminal = menu_cache_app_get_use_terminal(app);
 
 	if (comment_name)
@@ -66,6 +69,8 @@ menu_application (MenuCacheApp *app)
 
 	gchar *exec_cmd = clean_exec (menu_cache_app_get_exec (MENU_CACHE_APP(app)));
 
+#ifdef CAN_I_HAZ_ICONS
+	gchar *exec_icon = NULL;
 	if (no_icon == TRUE || (exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app))) == NULL)
 		g_print ("<item label=\"%s\">\n", exec_name);
 	else
@@ -73,6 +78,9 @@ menu_application (MenuCacheApp *app)
 		g_print ("<item label=\"%s\" icon=\"%s\">\n", exec_name, exec_icon);
 		g_free (exec_icon);
 	}
+#else
+	g_print ("<item label=\"%s\">\n", exec_name);
+#endif
 
 	g_print ("  <action name=\"Execute\"><command>\n"
 	         "    <![CDATA[%s %s]]>\n"

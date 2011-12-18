@@ -17,7 +17,11 @@
 
 #include <stdio.h>
 #include <glib.h>
+#ifdef CAN_I_HAZ_ICONS
 #include <gtk/gtk.h>
+#else
+#include <locale.h>
+#endif
 #include <glib/gi18n.h>
 #include <menu-cache.h>
 
@@ -28,8 +32,9 @@ guint32 show_flag = 0; // it was set to N_KNOWN_DESKTOPS (wrong value as it incl
 gpointer reload_notify_id = NULL;
 gboolean comment_name = FALSE;
 gboolean no_icon = FALSE;
+#ifdef CAN_I_HAZ_ICONS
 GtkIconTheme* icon_theme = NULL;
-
+#endif
 
 // Convert &,<,> and " to html entities
 char *
@@ -88,7 +93,7 @@ clean_exec (const char* exec)
 					g_string_append_c (cmd, '%');
 					g_string_append_c (cmd, *exec);
 			}
-		}	
+		}
 		else
 			g_string_append_c (cmd, *exec);
 	}
@@ -107,7 +112,7 @@ app_is_visible(MenuCacheApp *app, guint32 de_flag)
 		return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
 }
 
-
+#ifdef CAN_I_HAZ_ICONS
 gchar *
 get_item_icon_path (MenuCacheItem* item)
 {
@@ -123,20 +128,20 @@ get_item_icon_path (MenuCacheItem* item)
 
 	/*  We remove the file extension as gtk_icon_theme_lookup_icon can't
 	 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
-	 */ 
+	 */
 	tmp_name = strndup (name, strrchr (name, '.') - name);
-	
+
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);
 	g_free (tmp_name);
 
 	if (!icon_info) // 2nd fallback
 		icon_info = gtk_icon_theme_lookup_icon (icon_theme, "empty", 16, GTK_ICON_LOOKUP_NO_SVG);
-	
+
 	icon = g_strdup (gtk_icon_info_get_filename (icon_info));
 	gtk_icon_info_free (icon_info);
 	return icon;
 }
-
+#endif
 
 static void
 display_menu (MenuCache* menu, gpointer userdata)
@@ -169,7 +174,9 @@ main (int argc, char **argv)
 	gboolean show_rox = FALSE;
 	GOptionEntry entries[] = {
 		{ "comment",  'c', 0, G_OPTION_ARG_NONE, &comment_name, "Display comment instead of application name", NULL },
+#ifdef CAN_I_HAZ_ICONS
 		{ "noicons",  'i', 0, G_OPTION_ARG_NONE, &no_icon, "Don't display icons in menu", NULL },
+#endif
 		{ "terminal", 't', 0, G_OPTION_ARG_STRING, &terminal_cmd, "Terminal command (default sakura -e)", "cmd" },
 		{ "gnome",    'g', 0, G_OPTION_ARG_NONE, &show_gnome, "Display GNOME entries", NULL },
 		{ "kde",      'k', 0, G_OPTION_ARG_NONE, &show_kde, "Display KDE entries", NULL },
@@ -199,14 +206,14 @@ main (int argc, char **argv)
 	if (show_rox)
 		show_flag |= SHOW_IN_ROX;
 
-
+#ifdef CAN_I_HAZ_ICONS
 	if (!no_icon)
 	{
 		gtk_init (&argc, &argv);
 		gdk_init(&argc, &argv);
 		icon_theme = gtk_icon_theme_get_default ();
 	}
-
+#endif
 	g_print ("<openbox_pipe_menu xmlns=\"http://openbox.org/\""
 	         "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 	         "  xsi:schemaLocation=\"http://openbox.org/"
