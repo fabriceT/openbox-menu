@@ -1,16 +1,5 @@
-# Comment the line above if you don't want icons, it makes menu to appear faster.
-#DISPLAY_ICONS= 1
-
-CFLAGS= -Wall -O -g
-
-ifdef DISPLAY_ICONS
- LIBS= `pkg-config --libs glib-2.0 gtk+-2.0 libmenu-cache`
- CFLAGS+= `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache` -DCAN_I_HAZ_ICONS
-else
- LIBS= `pkg-config --libs glib-2.0 libmenu-cache`
- CFLAGS+= `pkg-config --cflags glib-2.0 libmenu-cache`
-endif
-
+LIBS= `pkg-config --libs glib-2.0 gtk+-2.0 libmenu-cache`
+CFLAGS= -Wall -O -g `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache`
 
 SRC= $(shell ls *.c 2> /dev/null)
 OBJ= $(SRC:.c=.o)
@@ -24,7 +13,11 @@ openbox-menu: $(OBJ)
 	gcc $(LIBS) $(OBJ) -o openbox-menu
 	strip -s openbox-menu
 
-.PHONY: clean
+.PHONY: clean doc
 
 clean:
 	@rm *.o openbox-menu
+	@rm -rf doc
+
+doc:
+	robodoc --src . --doc doc/ --multidoc --index --html --cmode

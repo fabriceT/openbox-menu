@@ -19,12 +19,5 @@
 
 #define VERSION "0.3.6.6"
 
-// menu.c
 guint app_is_visible(MenuCacheApp *, guint32);
 gchar *get_item_icon_path (MenuCacheItem*);
-char *sanitize (const char *);
-char *clean_exec (const char*);
-
-
-// openbox-generator.c
-void generate_openbox_menu (MenuCacheDir *);
