@@ -20,10 +20,13 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <menu-cache.h>
+#include <signal.h>
+
 #include "openbox-menu.h"
 
 GString *menu_data = NULL;
 gchar *menu_output = NULL;
+GMainLoop *loop = NULL;
 
 gchar *terminal_cmd = "xterm -e";
 guint32 show_flag = 0;
@@ -31,6 +34,12 @@ gboolean comment_name = FALSE;
 gboolean sn_enabled = FALSE;
 GtkIconTheme *icon_theme = NULL;
 
+/* from lxsession */
+void sig_term_handler (int sig)
+{
+	g_warning ("Aborting");
+	g_main_loop_quit (loop);
+}
 
 /****f* openbox-menu/get_safe_name
  * FUNCTION
@@ -440,8 +449,9 @@ main (int argc, char **argv)
 
 	if (persistent)
 	{
-		GMainLoop *loop = g_main_loop_new (NULL, FALSE);
-		/* TODO: check how we can stop this loop properly. */
+		signal (SIGTERM, sig_term_handler);
+		signal (SIGINT, sig_term_handler);
+		loop = g_main_loop_new (NULL, FALSE);
 		g_main_loop_run (loop);
 		g_main_loop_unref (loop);
 	}
