@@ -241,10 +241,6 @@ menu_directory (MenuCacheApp *dir)
 /****f* openbox-menu/menu_application
  * FUNCTION
  *   create a menu entry for an application.
- *
- * TODO
- *   Add startup notify if now it's ok. It was buggy and made programs
- *   to eat all CPU.
  ****/
 void
 menu_application (MenuCacheApp *app)
