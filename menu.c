@@ -385,6 +385,7 @@ main (int argc, char **argv)
 	gboolean show_rox = FALSE;
 	gboolean persistent = FALSE;
 	gchar *output = NULL;
+	GError *error = NULL;
 	GOptionEntry entries[] = {
 		{ "comment",   'c', 0, G_OPTION_ARG_NONE,
 		  &comment_name, "Show generic name instead of application name", NULL },
@@ -414,12 +415,15 @@ main (int argc, char **argv)
 	context = g_option_context_new (" - Openbox menu generator " VERSION);
 	g_option_context_set_help_enabled (context, TRUE);
 	g_option_context_add_main_entries (context, entries, NULL);
+	g_option_context_parse (context, &argc, &argv, &error);
 
-	if (!g_option_context_parse (context, &argc, &argv, NULL))
+	if (error)
 	{
-		g_print ("%s\n", g_option_context_get_help (context, FALSE, NULL));
+		g_print ("%s\n", error->message);
+		g_error_free (error);
 		return 1;
 	}
+
 	g_option_context_free (context);
 
 	gtk_init (&argc, &argv);
