@@ -21,6 +21,7 @@
 #include <glib/gi18n.h>
 #include <menu-cache.h>
 #include <signal.h>
+#include <locale.h>
 
 #include "openbox-menu.h"
 
