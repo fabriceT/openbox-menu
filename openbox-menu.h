@@ -17,7 +17,7 @@
  *      MA 02110-1301, USA.
  */
 
-#define VERSION "0.3.6.6"
+#define VERSION "0.3.6.7"
 
 guint app_is_visible(MenuCacheApp *, guint32);
 gchar *get_item_icon_path (MenuCacheItem*);
