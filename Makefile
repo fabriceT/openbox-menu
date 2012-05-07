@@ -3,7 +3,7 @@ CFLAGS+= -Wall -g `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache`
 
 prefix= /usr
 DESTDIR ?= $(prefix)
-BINDIR= /bin/
+BINDIR= ${DESTDIR}/bin
 
 SRC= $(shell ls *.c 2> /dev/null)
 OBJ= $(SRC:.c=.o)
@@ -23,8 +23,7 @@ clean:
 	@rm -rf doc
 
 install:
-	@install -dm 755 $(DESTDIR)$(BINDIR)
-	@install -m 755 openbox-menu $(DESTDIR)$(BINDIR)
+	@install -Dm 755 openbox-menu $(BINDIR)/openbox-menu
 
 doc:
 	robodoc --src . --doc doc/ --multidoc --index --html --cmode
