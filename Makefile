@@ -1,7 +1,7 @@
 LIBS= `pkg-config --libs glib-2.0 gtk+-2.0 libmenu-cache`
 CFLAGS+= -Wall -g `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache`
 
-prefix= /usr
+prefix= /usr/local
 DESTDIR ?= $(prefix)
 BINDIR= ${DESTDIR}/bin
 
