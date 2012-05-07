@@ -1,56 +1,275 @@
-See https://code.google.com/p/mimarchlinux/source/list?repo=openbox-menu for changes
+2012-05-07  mimas  <mimasgpc@free.fr>
 
------ Old Changelog -----
+	* Makefile:
+	/usr/local is the prefix by default. It can be changed by using
+	'make install DESTDIR=/prefix'
+	[b7b0442c62e4] [tip]
 
-2011-02-05  mimas  <mimasgpc@free.fr>
+	* Makefile:
+	Makefile changes
+	[32e13cd2f4cd]
 
- * Version 0.3.6
- * Add -c switch to display application comment instead of name.
- 
+	* menu.c, openbox-menu.h:
+	Fix copyright dates
+	[84f44c77d5f5]
 
-2010-03-31  mimas  <mimasgpc@free.fr>
+	* Makefile:
+	Fix an unwanted error in make clean.
+	[2a651118b437]
 
- * Version 0.3.5
- * Exec command is now in CDATA tag.
+2012-05-06  mimas  <mimasgpc@free.fr>
 
+	* arch/PKGBUILD:
+	Add a PKGBUILD for Archlinux.
+	[b2f1e85c112c]
 
-2010-03-14  mimas  <mimasgpc@free.fr>
+2012-05-04  mimas  <mimasgpc@free.fr>
 
- * Version 0.3.4
- * Fix that stupid bug that prevent from launching CLI applications.
+	* .hgtags:
+	Added tag v0.3.6.7 for changeset 8aec06a01452
+	[101270e8be5a]
 
+	* openbox-menu.h:
+	Bump to 0.3.6.7
+	[8aec06a01452] [v0.3.6.7]
 
-2010-02-21  mimas  <mimasgpc@free.fr>
+	* THANKS:
+	THANKS file added
+	[a1ef762d1bad]
 
- * Version 0.3.3
- * Get rid off the -m flag, it was a stupid idea. Just add the menuname in the commandline.
+2012-04-28  mimas  <mimasgpc@free.fr>
 
+	* Makefile:
+	An install rule was added (Makefile)
+	[d7413d3d4f9d]
 
-2010-02-20  mimas  <mimasgpc@free.fr>
+2012-02-20  mimas  <mimasgpc@free.fr>
 
- * Version 0.3.2
- * Less dumber filter (far from perfect but better. I think :/)
- * Get rid off LXDE filter (as it's a default value)
- * Use of startup notification flag.
+	* Makefile, menu.c:
+	Patch for Makefile from Sławomir Nizio
+	[2096818a39ce]
 
-2010-02-19  mimas  <mimasgpc@free.fr>
+2012-01-01  mimas  <mimasgpc@free.fr>
 
- * Version 0.3.1
- * Updated for libmenu-cache 3.x (use of notification/reload)
+	* menu.c:
+	Adding GError for g_option_context_parse
+	[73ddcc292ef7]
 
-2010-02-14  mimas  <mimasgpc@free.fr>
+2011-12-28  mimas  <mimasgpc@free.fr>
 
- * Version 0.3
- * New options. You can now filter various desktop specific entries (GNOME, KDE, LXDE, ROX & XFCE)
- * You can define a terminal command to launch console applications (default is sakura -e).
- * Code clean-up
+	* menu.c:
+	Comment removed
+	[2ff237350f5a]
 
-2009-08-02  mimas  <mimasgpc@free.fr>
+2011-12-25  mimas  <mimasgpc@free.fr>
 
- * Version 0.2
- * Add help message.
- * Display an error message if no entries are found in menu.
+	* menu.c:
+	Handle SIGINT & SIGTERM signals to make a g_main_loop_quit
+	[ed49034d2062]
 
-2009-10-20  mimas  <mimasgpc@free.fr>
+2011-12-21  mimas  <mimasgpc@free.fr>
 
-  *	First release.
+	* Makefile, menu.c, openbox-generator.c, openbox-menu.h:
+	Major code modification, nearly a complete rewrite of openbox-menu.
+	- use of GString for the menupipe content.
+	- add a persistent mode.
+	- can write the XML into a file.
+	- many fixes and code rewrite.
+	- startup notification is back.
+	- ...
+	[e4e3a596ffd9]
+
+2011-12-18  mimas  <mimasgpc@free.fr>
+
+	* Makefile, menu.c, openbox-generator.c:
+	Add a conditional flag that permits to compile openbox-menu without
+	gtk and icons
+	[0f22230ff265]
+
+2011-11-13  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.3.6.6 for changeset 989c9da7fd1d
+	[e2e768ef9148]
+
+	* openbox-menu.h:
+	Bump to 0.3.6.6
+	[989c9da7fd1d] [v0.3.6.6]
+
+	* menu.c:
+	Fix a comment
+	[df37bffd2646]
+
+	* menu.c:
+	2nd fallback added, now every entry should have its icon
+	[25ef8cb10dae]
+
+	* menu.c:
+	fallback for icon search
+	[ce0ba620bc2a]
+
+	* menu.c:
+	use of strrchr()
+	[0d0d4fd67e3c]
+
+2011-11-07  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.3.6.4 for changeset 2cc5c76a2581
+	[a7cd8e156735]
+
+	* .hgtags:
+	Added tag v0.3.6.5 for changeset a68d53a9e5a3
+	[cc713467b019]
+
+	* .hgtags:
+	Added tag v0.3.6.3 for changeset ce182c3b44d0
+	[fbdebfd4f3da]
+
+2011-11-06  mimas  <mimasgpc@free.fr>
+
+	* .hgtags:
+	Added tag v0.3.6.1 for changeset 85b6eda07d65
+	[eec07eb13f24]
+
+	* .hgtags:
+	Added tag v0.3.6 for changeset 607cb011a046
+	[15ca70f8c5ef]
+
+2011-10-15  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Change the way Exec field codes should be treated. I have to RTFM
+	more often, it was written in Freedesktop specification file. Stupid
+	me!
+	[20649de297ef]
+
+	* menu.c:
+	Exec parsing now stops on % or " signs. This prevents this kind of
+	bug: http://ctkarch.org/forum/viewtopic.php?id=2&t_id=136
+
+	I'm not very happy with this solution as it may remove some extra
+	args but arguments between double quotes, not "%X" freedesktop-
+	likes, should be very rare in .desktop files.
+	[3d3fa658da9f]
+
+2011-08-31  mimas  <mimasgpc@free.fr>
+
+	* openbox-menu.h:
+	Bump to 0.3.6.5
+	[a68d53a9e5a3] [v0.3.6.5]
+
+	* menu.c, openbox-generator.c, openbox-menu.h:
+	Fix horrible programming syntax (thanks CaliméroTeknik)
+	get_icon_path() replaced by get_item_icon_path(). It makes calls to
+	this function a lot shorter.
+	[006b8a7fc5a0]
+
+	* menu.c:
+	sakura replaced by xterm
+	[d933c131cd55]
+
+2011-08-29  mimas  <mimasgpc@free.fr>
+
+	* openbox-menu.h:
+	Bump to 0.3.6.4
+	[2cc5c76a2581] [v0.3.6.4]
+
+	* menu.c, openbox-generator.c, openbox-menu.h:
+	Menu generation is now separated from "core" engine.
+	[45f256d024ba]
+
+2011-08-21  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Using a sync method for generating the menu + Various minor changes
+	in code.
+	[da239c6a084b]
+
+2011-08-11  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Bump to version 0.3.6.3
+	[ce182c3b44d0] [v0.3.6.3]
+
+	* menu.c:
+	gtk_icon_theme_lookup_icon should not fail to lookup current theme
+	icon.
+	[fd7a645c3d6f]
+
+2011-08-06  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	g_error() -> g_warning()
+	[8fed260dbbef]
+
+	* menu.c:
+	Who needs a break here?
+	[c3ffbf0723fe]
+
+	* menu.c:
+	Support for startup-notification removed. It is buggy with openbox
+	3.50 and I don't even know the real utility of SN. Some old code
+	related to LXDE desktop removed too.
+	[9fee09f25373]
+
+2011-08-06  mimasgpc  <mimasgpc@free.fr>
+
+	* menu.c:
+	A menu error message more explicit
+	[6e00f27f9150]
+
+	* menu.c:
+	I didn't really love the old code formatting. Get back to a more
+	concise one
+	[ce2cf4d5636d]
+
+2011-08-03  mimas  <mimasgpc@free.fr>
+
+	* Makefile:
+	Fix new dependencies in Makefile
+	[88a797541092]
+
+	* menu.c:
+	Big code changes, to much to write about it.
+
+	Feature added : icons in menus. Yes ! (openbox 3.5.0 required) New
+	dependencies : gtk+ 2 and gdk.
+	[096517229b57]
+
+2011-03-15  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Bump to 0.3.6.1
+	[85b6eda07d65] [v0.3.6.1]
+
+	* ChangeLog:
+	Changelog updated
+	[4794d87aebbb]
+
+2011-03-11  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	(re)fix goption flags
+	[9e0c23a3e6f9]
+
+	* menu.c:
+	GOptionContext warning fixes (glib 2.28)
+	[59eca416e9c0]
+
+2011-02-20  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Fix headers and change some formating
+	[f1ce9d7a9423]
+
+2011-02-15  mimas  <mimasgpc@free.fr>
+
+	* menu.c:
+	Bump to 0.3.6
+	[607cb011a046] [v0.3.6]
+
+	* .hgignore, AUTHORS, COPYING, ChangeLog, Makefile, menu.c:
+	First commit
+	[236107f09e6c]
+

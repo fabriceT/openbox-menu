@@ -16,7 +16,7 @@ all: $(OBJ) openbox-menu
 openbox-menu: $(OBJ)
 	$(CC) $(OBJ) -o openbox-menu $(LDFLAGS) $(LIBS)
 
-.PHONY: clean install doc
+.PHONY: clean install doc changelog
 
 clean:
 	@rm -f *.o openbox-menu
@@ -27,3 +27,6 @@ install:
 
 doc:
 	robodoc --src . --doc doc/ --multidoc --index --html --cmode
+
+changelog:
+	@hg log --style changelog > ChangeLog
