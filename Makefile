@@ -19,7 +19,7 @@ openbox-menu: $(OBJ)
 .PHONY: clean install doc
 
 clean:
-	@rm *.o openbox-menu
+	@rm -f *.o openbox-menu
 	@rm -rf doc
 
 install:
