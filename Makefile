@@ -1,6 +1,9 @@
 LIBS= `pkg-config --libs glib-2.0 gtk+-2.0 libmenu-cache`
 CFLAGS+= -Wall -g `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache`
 
+# Comment this line if you don't want icons to appear in menu
+CFLAGS+=-DWITH_ICONS
+
 prefix= /usr/local
 DESTDIR ?= $(prefix)
 BINDIR= ${DESTDIR}/bin

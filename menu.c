@@ -227,15 +227,21 @@ menu_directory (MenuCacheApp *dir)
 {
 	gchar *dir_id = get_safe_name (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
 	gchar *dir_name = get_safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
+
+#ifdef WITH_ICONS
 	gchar *dir_icon = get_item_icon_path (MENU_CACHE_ITEM(dir));
 
 	g_string_append_printf (menu_data,
 	    "<menu id=\"openbox-%s\" label=\"%s\" icon=\"%s\">\n",
 	    dir_id, dir_name, dir_icon);
-
+	g_free (dir_icon);
+#else
+	g_string_append_printf (menu_data,
+	    "<menu id=\"openbox-%s\" label=\"%s\">\n",
+	    dir_id, dir_name);
+#endif	
 	g_free (dir_id);
 	g_free (dir_name);
-	g_free (dir_icon);
 }
 
 
@@ -255,14 +261,20 @@ menu_application (MenuCacheApp *app)
 	else
 		exec_name = get_safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 
-	exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app));
 	exec_cmd = clean_exec (app);
-
+		
+#ifdef WITH_ICONS
+	exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app));
 	g_string_append_printf (menu_data,
 	    "<item label=\"%s\" icon=\"%s\"><action name=\"Execute\">",
 	    exec_name,
 	    exec_icon);
+#else
+	g_string_append_printf (menu_data,
+	    "<item label=\"%s\"<action name=\"Execute\">",
+	    exec_name);
 
+#endif
 	if (sn_enabled && menu_cache_app_get_use_sn (app))
 		g_string_append (menu_data,
 	        "<startupnotify><enabled>yes</enabled></startupnotify>");
@@ -427,9 +439,11 @@ main (int argc, char **argv)
 
 	g_option_context_free (context);
 
+#ifdef WITH_ICONS
 	gtk_init (&argc, &argv);
 	gdk_init(&argc, &argv);
 	icon_theme = gtk_icon_theme_get_default ();
+#endif
 
 	if (output)
 		menu_output = g_build_filename (g_get_user_cache_dir (), output, NULL);
