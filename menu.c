@@ -17,7 +17,9 @@
 
 #include <stdio.h>
 #include <glib.h>
-#include <gtk/gtk.h>
+#ifdef WITH_ICONS
+	#include <gtk/gtk.h>
+#endif
 #include <glib/gi18n.h>
 #include <menu-cache.h>
 #include <signal.h>
@@ -33,8 +35,10 @@ gchar *terminal_cmd = "xterm -e";
 guint32 show_flag = 0;
 gboolean comment_name = FALSE;
 gboolean sn_enabled = FALSE;
-GtkIconTheme *icon_theme = NULL;
-
+gboolean no_icons = FALSE;
+#ifdef WITH_ICONS
+	GtkIconTheme *icon_theme = NULL;
+#endif
 /* from lxsession */
 void sig_term_handler (int sig)
 {
@@ -125,7 +129,7 @@ clean_exec (MenuCacheApp *app)
 				case 'c':
 					g_string_append (cmd, menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 					break;
-
+#if WITH_ICONS
 				case 'i':
 					if (get_item_icon_path (MENU_CACHE_ITEM(app)))
 					{
@@ -133,7 +137,7 @@ clean_exec (MenuCacheApp *app)
 						    get_item_icon_path (MENU_CACHE_ITEM(app)));
 					}
 					break;
-
+#endif
 				case 'k':
 					filepath = menu_cache_item_get_file_path (MENU_CACHE_ITEM(app));
 					if (filepath)
@@ -156,7 +160,7 @@ clean_exec (MenuCacheApp *app)
 	return g_strchomp (g_string_free (cmd, FALSE));
 }
 
-
+#if WITH_ICONS
 /****f* openbox-menu/get_item_icon_path
  * OUTPUT
  *   return the path for the themed icon if item.
@@ -200,7 +204,7 @@ get_item_icon_path (MenuCacheItem *item)
 
 	return icon;
 }
-
+#endif
 
 
 guint
@@ -229,17 +233,21 @@ menu_directory (MenuCacheApp *dir)
 	gchar *dir_name = get_safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
 
 #ifdef WITH_ICONS
-	gchar *dir_icon = get_item_icon_path (MENU_CACHE_ITEM(dir));
+	if (!no_icons)
+	{
+		gchar *dir_icon = get_item_icon_path (MENU_CACHE_ITEM(dir));
 
-	g_string_append_printf (menu_data,
-	    "<menu id=\"openbox-%s\" label=\"%s\" icon=\"%s\">\n",
-	    dir_id, dir_name, dir_icon);
-	g_free (dir_icon);
-#else
+		g_string_append_printf (menu_data,
+		    "<menu id=\"openbox-%s\" label=\"%s\" icon=\"%s\">\n",
+		    dir_id, dir_name, dir_icon);
+		g_free (dir_icon);
+	}
+	else
+#endif
 	g_string_append_printf (menu_data,
 	    "<menu id=\"openbox-%s\" label=\"%s\">\n",
 	    dir_id, dir_name);
-#endif	
+
 	g_free (dir_id);
 	g_free (dir_name);
 }
@@ -262,19 +270,22 @@ menu_application (MenuCacheApp *app)
 		exec_name = get_safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
 
 	exec_cmd = clean_exec (app);
-		
+
 #ifdef WITH_ICONS
-	exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app));
-	g_string_append_printf (menu_data,
-	    "<item label=\"%s\" icon=\"%s\"><action name=\"Execute\">",
-	    exec_name,
-	    exec_icon);
-#else
+	if (!no_icons)
+	{
+		exec_icon = get_item_icon_path (MENU_CACHE_ITEM(app));
+		g_string_append_printf (menu_data,
+	      "<item label=\"%s\" icon=\"%s\"><action name=\"Execute\">",
+	      exec_name,
+	      exec_icon);
+	}
+	else
+#endif
 	g_string_append_printf (menu_data,
 	    "<item label=\"%s\"<action name=\"Execute\">",
 	    exec_name);
 
-#endif
 	if (sn_enabled && menu_cache_app_get_use_sn (app))
 		g_string_append (menu_data,
 	        "<startupnotify><enabled>yes</enabled></startupnotify>");
@@ -418,6 +429,8 @@ main (int argc, char **argv)
 		  &sn_enabled, "Enable startup notification", NULL },
 		{ "output",    'o', 0, G_OPTION_ARG_STRING,
 		  &output, "file to write data to", NULL },
+		{ "noicons",    'i', 0, G_OPTION_ARG_NONE,
+		  &no_icons, "Don't display icons in menu", NULL },
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY,
 		  &app_menu, NULL, "[file.menu]" },
 		{NULL}
