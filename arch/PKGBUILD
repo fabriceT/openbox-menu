@@ -1,15 +1,16 @@
-# Contributor: Calimero <calimeroteknik@free.fr>
-#              mimas    <mimasgpc@free.fr>
+# Contributors: Calimero <calimeroteknik@free.fr>
+# mimas <mimasgpc@free.fr>
 
 pkgname=openbox-menu
 pkgver=0.3.6.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Dynamic XDG menu for openbox"
 arch=('i686' 'x86_64')
-url="http://mimasgpc.free.fr/openbox-menu-fr.html"
+url="http://mimasgpc.free.fr/openbox-menu.html"
 license=('GPL3')
-depends=('menu-cache' 'lxmenu-data' 'gtk2')
-source=(http://mimarchlinux.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+depends=('gtk2' 'menu-cache')
+optdepends=('lxmenu-data: LXDE menus' 'gnome-menus: GNOME menus')
+source=("http://mimarchlinux.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2")
 md5sums=('98d4c67d65510a058fb4f30e399baa5c')
 
 build() {
@@ -21,4 +22,3 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make install DESTDIR="${pkgdir}/usr/"
 }
-
