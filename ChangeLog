@@ -1,9 +1,39 @@
+2012-11-25  Pierre Ferry  <biloucat@gmail.com>
+
+	* arch/PKGBUILD:
+	Update PKGBUILD
+	[3cdda94758d1] [tip]
+
+2012-06-30  mimas  <mimasgpc@free.fr>
+
+	* Makefile:
+	Oops, restoring commented line in Makefile
+	[84d5728c5105]
+
+	* Makefile, menu.c:
+	-i (--no-icons) makes its comeback
+	[2506108c7569]
+
+	* arch/PKGBUILD:
+	Add gtk2 dep in PKGBUILD
+	[5a0b8f077c35]
+
+	* Makefile, README, menu.c:
+	Add a flag to compile openbox-menu without icons (it has disapeared
+	in a misterious way)
+	[044afe1a1c01]
+
 2012-05-07  mimas  <mimasgpc@free.fr>
+
+	* ChangeLog, Makefile:
+	Add a Makefile rule to build an up-to-date changelog. I may remember
+	to use it before a new release. :)
+	[3a4a6b33befb]
 
 	* Makefile:
 	/usr/local is the prefix by default. It can be changed by using
 	'make install DESTDIR=/prefix'
-	[b7b0442c62e4] [tip]
+	[b7b0442c62e4]
 
 	* Makefile:
 	Makefile changes

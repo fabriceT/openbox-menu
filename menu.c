@@ -466,25 +466,34 @@ main (int argc, char **argv)
 	if (show_xfce)  show_flag |= SHOW_IN_XFCE;
 	if (show_rox)   show_flag |= SHOW_IN_ROX;
 
-	MenuCache *menu_cache = menu_cache_lookup (app_menu?*app_menu:"applications.menu");
+	// wait for the menu to get ready
+	MenuCache *menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
 	if (!menu_cache )
 	{
 		g_warning ("Cannot connect to menu-cache :/");
 		return 1;
 	}
 
-	reload_notify_id = menu_cache_add_reload_notify (menu_cache, (GFunc) display_menu, menu_output);
+	// display the menu anyway
+	display_menu(menu_cache, menu_output);
 
 	if (persistent)
 	{
+		// menucache used to reload the cache after a call to menu_cache_lookup* ()
+		// It's not true any more with version >= 0.4.0.
+		reload_notify_id = menu_cache_add_reload_notify (menu_cache, (GFunc) display_menu, menu_output);
+
+		// install signals handler
 		signal (SIGTERM, sig_term_handler);
 		signal (SIGINT, sig_term_handler);
+
+		// run main loop
 		loop = g_main_loop_new (NULL, FALSE);
 		g_main_loop_run (loop);
 		g_main_loop_unref (loop);
+
+		menu_cache_remove_reload_notify (menu_cache, reload_notify_id);
 	}
-	else
-		menu_cache_reload (menu_cache); /* not persistent, we force the cache to reload. */
 
 	menu_cache_unref (menu_cache);
 	g_free (menu_output);
