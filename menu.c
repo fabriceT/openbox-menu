@@ -488,7 +488,9 @@ main (int argc, char **argv)
 	{
 		// menucache used to reload the cache after a call to menu_cache_lookup* ()
 		// It's not true anymore with version >= 0.4.0.
-		reload_notify_id = menu_cache_add_reload_notify (menu_cache, (GFunc) display_menu, &ob_context);
+		reload_notify_id = menu_cache_add_reload_notify (menu_cache,
+		                        (MenuCacheReloadNotify) display_menu,
+		                        &ob_context);
 
 		// install signals handler
 		signal (SIGTERM, sig_term_handler);
