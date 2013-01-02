@@ -454,7 +454,6 @@ main (int argc, char **argv)
 
 #ifdef WITH_ICONS
 	gtk_init (&argc, &argv);
-	gdk_init(&argc, &argv);
 	icon_theme = gtk_icon_theme_get_default ();
 #endif
 
