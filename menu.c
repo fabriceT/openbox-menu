@@ -159,6 +159,8 @@ clean_exec (MenuCacheApp *app)
  *   return the path for the themed icon if item.
  *   If no icon found, it returns the "empty" icon path.
  *
+ *   The returned string should be freed when no longer needed
+ *
  * NOTES
  *   Imlib2, used by OpenBox to display icons, doesn't load SVG graphics.
  *   We have to use GTK_ICON_LOOKUP_NO_SVG flag to look up icons.
@@ -412,6 +414,21 @@ main (int argc, char **argv)
 	gchar   **app_menu = NULL;
 	gchar    *output = NULL;
 	gchar    *terminal = "xterm -e";
+	/*
+	 * TODO: Registered OnlyShowIn Environments
+	 *  Ref: http://standards.freedesktop.org/menu-spec/latest/apb.html
+	 *
+	 * GNOME GNOME Desktop
+	 * KDE   KDE Desktop
+	 * LXDE  LXDE Desktop
+	 * MATE  MATÉ Desktop
+	 * Razor Razor-qt Desktop
+	 * ROX   ROX Desktop
+	 * TDE   Trinity Desktop
+	 * Unity Unity Shell
+	 * XFCE  XFCE Desktop
+	 * Old   Legacy menu systems
+	 */
 	GOptionEntry entries[] = {
 		{ "comment",   'c', 0, G_OPTION_ARG_NONE, &ob_context.comment,
 		  "Show generic name instead of application name", NULL },
