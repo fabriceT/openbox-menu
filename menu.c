@@ -480,7 +480,7 @@ main (int argc, char **argv)
 	if (persistent)
 	{
 		// menucache used to reload the cache after a call to menu_cache_lookup* ()
-		// It's not true any more with version >= 0.4.0.
+		// It's not true anymore with version >= 0.4.0.
 		reload_notify_id = menu_cache_add_reload_notify (menu_cache, (GFunc) display_menu, menu_output);
 
 		// install signals handler
