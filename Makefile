@@ -1,5 +1,6 @@
 LIBS= `pkg-config --libs glib-2.0 gtk+-2.0 libmenu-cache`
 CFLAGS+= -g -Wall -g `pkg-config --cflags glib-2.0 gtk+-2.0 libmenu-cache`
+CC=gcc
 #-DG_DISABLE_DEPRECATED
 
 # Comment this line if you don't want icons to appear in menu
@@ -27,6 +28,7 @@ clean:
 	@rm -rf doc
 
 install:
+	@strip -s openbox-menu
 	@install -Dm 755 openbox-menu $(BINDIR)/openbox-menu
 
 doc:
