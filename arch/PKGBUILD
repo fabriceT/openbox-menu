@@ -3,10 +3,12 @@
 
 _pkgname=openbox-menu
 pkgname=$_pkgname-hg
-pkgver=65.9b1bd4c57d2c
+pkgver=66.35d948d8b998
 pkgrel=1
 pkgdesc="Dynamic XDG menu for openbox"
 arch=('i686' 'x86_64')
+provides=("openbox-menu")
+conflicts=("openbox-menu")
 url="http://mimasgpc.free.fr/openbox-menu.html"
 license=('GPL3')
 depends=('gtk2' 'menu-cache')
