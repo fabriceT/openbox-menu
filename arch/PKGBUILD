@@ -1,8 +1,9 @@
 # Contributors: Calimero <calimeroteknik@free.fr>
-# mimas <mimasgpc@free.fr>
+# Maintainer: mimas <mimasgpc@free.fr>
 
-pkgname=openbox-menu
-pkgver=0.3.6.8
+_pkgname=openbox-menu
+pkgname=$_pkgname-hg
+pkgver=65.9b1bd4c57d2c
 pkgrel=1
 pkgdesc="Dynamic XDG menu for openbox"
 arch=('i686' 'x86_64')
@@ -10,16 +11,20 @@ url="http://mimasgpc.free.fr/openbox-menu.html"
 license=('GPL3')
 depends=('gtk2' 'menu-cache')
 optdepends=('lxmenu-data: LXDE menus' 'gnome-menus: GNOME menus')
-source=("http://mimarchlinux.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('321f74060976e9bc8aaa82436aa28ab2')
+source=("hg+https://code.google.com/p/mimarchlinux.openbox-menu/")
+md5sums=('SKIP')
+
+pkgver() {
+  cd mimarchlinux.$_pkgname
+  echo $(hg identify -n).$(hg identify -i)
+}
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $srcdir/mimarchlinux.$_pkgname
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $srcdir/mimarchlinux.$_pkgname
   make install DESTDIR="${pkgdir}/usr/"
 }
-
