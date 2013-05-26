@@ -282,7 +282,7 @@ menu_application (MenuCacheApp *app, OB_Menu *context)
 #endif
 	{
 		g_string_append_printf (context->builder,
-	      "<item label=\"%s\"<action name=\"Execute\">",
+	      "<item label=\"%s\"><action name=\"Execute\">",
 	      exec_name);
 	}
 
@@ -406,11 +406,11 @@ main (int argc, char **argv)
 	GError *error = NULL;
 	OB_Menu ob_context;
 
-	gboolean  show_gnome;
-	gboolean  show_kde;
-	gboolean  show_xfce;
-	gboolean  show_rox;
-	gboolean  persistent;
+	gboolean  show_gnome = FALSE;
+	gboolean  show_kde = FALSE;
+	gboolean  show_xfce = FALSE;
+	gboolean  show_rox = FALSE;
+	gboolean  persistent = FALSE;
 	gchar   **app_menu = NULL;
 	gchar    *output = NULL;
 	gchar    *terminal = "xterm -e";
