@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gprintf.h>
 #ifdef WITH_ICONS
 	#include <gtk/gtk.h>
 #endif
@@ -24,6 +25,7 @@
 #include <menu-cache.h>
 #include <signal.h>
 #include <locale.h>
+#include <stdlib.h>
 
 #include "openbox-menu.h"
 
@@ -398,12 +400,48 @@ display_menu (MenuCache *menu, OB_Menu *context)
 }
 
 
+gchar *
+get_application_menu (void)
+{
+	gchar menu[APPMENU_SIZE];
+
+	gchar *xdg_prefix = getenv("XDG_MENU_PREFIX");
+	if (xdg_prefix)
+	{
+		g_snprintf (menu, APPMENU_SIZE, "%sapplications.menu", xdg_prefix);
+	}
+	else
+		g_strlcpy (menu, "applications.menu", APPMENU_SIZE);
+
+	return strdup (menu);
+}
+
+
+gboolean
+check_application_menu (gchar *menu)
+{
+	gchar *menu_path = g_build_filename ("/etc","xdg", "menus", menu, NULL);
+	if (!g_file_test (menu_path, G_FILE_TEST_EXISTS))
+	{
+		g_print ("File %s doesn't exists. Can't create menu\n", menu_path);
+		g_free (menu_path);
+		return FALSE;
+	}
+	else
+	{
+		g_free (menu_path);
+		return TRUE;
+	}
+}
+
+
 int
 main (int argc, char **argv)
 {
 
 	gpointer reload_notify_id = NULL;
 	GError *error = NULL;
+	gchar  *menu = NULL;
 	OB_Menu ob_context;
 
 	gboolean  show_gnome = FALSE;
@@ -490,10 +528,19 @@ main (int argc, char **argv)
 	if (show_xfce)  ob_context.show_flag |= SHOW_IN_XFCE;
 	if (show_rox)   ob_context.show_flag |= SHOW_IN_ROX;
 
+	if (!app_menu)
+		menu = get_application_menu ();
+	else
+		menu = strdup (*app_menu);
+
+	if (!check_application_menu (menu))
+		return 1;
+
 	// wait for the menu to get ready
-	MenuCache *menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
+	MenuCache *menu_cache = menu_cache_lookup_sync (menu);
 	if (!menu_cache )
 	{
+		g_free (menu);
 		g_warning ("Cannot connect to menu-cache :/");
 		return 1;
 	}
@@ -523,6 +570,7 @@ main (int argc, char **argv)
 	}
 
 	menu_cache_unref (menu_cache);
+	g_free (menu);
 	g_free (ob_context.output);
 
 	return 0;

@@ -19,6 +19,8 @@
 
 #define VERSION "0.3.6.7"
 
+#define APPMENU_SIZE 30
+
 guint app_is_visible(MenuCacheApp *, guint32);
 gchar *get_item_icon_path (MenuCacheItem*);
 
