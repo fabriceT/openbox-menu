@@ -12,6 +12,7 @@ conflicts=("openbox-menu")
 url="http://mimasgpc.free.fr/openbox-menu.html"
 license=('GPL3')
 depends=('gtk2' 'menu-cache')
+makedepends=("mercurial")
 optdepends=('lxmenu-data: LXDE menus' 'gnome-menus: GNOME menus')
 source=("hg+https://code.google.com/p/mimarchlinux.openbox-menu/")
 md5sums=('SKIP')
