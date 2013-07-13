@@ -442,7 +442,7 @@ main (int argc, char **argv)
 	gpointer reload_notify_id = NULL;
 	GError *error = NULL;
 	gchar  *menu = NULL;
-	OB_Menu ob_context;
+	OB_Menu ob_context = { 0 };
 
 	gboolean  show_gnome = FALSE;
 	gboolean  show_kde = FALSE;
