@@ -1,8 +1,109 @@
+2013-07-14  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* Makefile:
+	Makefile: Add a test for xml output (xmllint)
+	[803dcfbcce0d] [tip]
+
+2013-07-13  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* archlinux/PKGBUILD:
+	Add mercurial to makedepends
+	[0c72409539f6]
+
+	* menu.c:
+	Fix a structure not zeroed, causing some internal flags to be set
+	[217aea6dd615]
+
+2013-06-02  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* TODO:
+	TODO updated
+	[944c81cdb4e9]
+
+	* Makefile, menu.c, openbox-menu.h:
+	If no menu is provided in the command line then applications.menu is
+	used (prefixed by XDG_MENU_PREFIX env. variable content if defined).
+	The presence of the menu is tested.
+	[223c0985f5d0]
+
+2013-05-26  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* TODO:
+	TODO added
+	[ca7e1b36c225]
+
+	* menu.c:
+	Fix non persistent mode + header typo causing an invalid xml output
+	[4059fb079edb]
+
+	* arch/PKGBUILD, archlinux/PKGBUILD:
+	arch directory renamed as archlinux
+	[82d6115c0900]
+
+	* arch/PKGBUILD:
+	PKGBUILD: added conflicts and provides keys
+	[850f4c8cd3c6]
+
+	* arch/PKGBUILD:
+	PKGBUILD: updated for mercurial version
+	[35d948d8b998]
+
+2013-01-05  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* Makefile:
+	Makefile: set CC to gcc. Stripping extra infos from executable when
+	invoking 'make install'.
+	[9b1bd4c57d2c]
+
+2013-01-03  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* menu.c:
+	Comments
+	[b54094e2979d]
+
+2013-01-02  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* menu.c:
+	Fix the type of menu_cache_add_reload_notify callback
+	[8530e4ad953a]
+
+	* menu.c:
+	reload_notify_id needed to be freed
+	[4cee4b95a6bf]
+
+	* menu.c, openbox-menu.h:
+	Most of global variables were moved into a structure. Now a pointer
+	is passed to functions that need some of theses values.
+	[b15eb042ec76]
+
+	* menu.c:
+	gdk_init () is not needed
+	[cd40b9606841]
+
+	* menu.c:
+	Typo
+	[010a2e5db613]
+
+2012-12-02  mimas  <mimasgpc@free.fr>
+
+	* arch/PKGBUILD:
+	PKGBUILD updated (md5sums)
+	[015af8afb723]
+
+	* .hgtags:
+	Added tag v0.3.6.8 for changeset 64441862ddf4
+	[ff110661f841]
+
+	* ChangeLog, Makefile, arch/PKGBUILD, menu.c:
+	Fix the bug causing openbox-menu to not show the menu with menu-
+	cache 0.4.x
+	[64441862ddf4] [v0.3.6.8]
+
 2012-11-25  Pierre Ferry  <biloucat@gmail.com>
 
 	* arch/PKGBUILD:
 	Update PKGBUILD
-	[3cdda94758d1] [tip]
+	[3cdda94758d1]
 
 2012-06-30  mimas  <mimasgpc@free.fr>
 

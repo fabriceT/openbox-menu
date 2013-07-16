@@ -17,7 +17,7 @@
  *      MA 02110-1301, USA.
  */
 
-#define VERSION "0.3.6.7"
+#define VERSION "0.4.99"
 
 #define APPMENU_SIZE 30
 
