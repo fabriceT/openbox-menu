@@ -14,20 +14,20 @@ license=('GPL3')
 depends=('gtk2' 'menu-cache')
 makedepends=("mercurial")
 optdepends=('lxmenu-data: LXDE menus' 'gnome-menus: GNOME menus')
-source=("hg+https://code.google.com/p/mimarchlinux.openbox-menu/")
+source=("hg+https://bitbucket.org/fabriceT/openbox-menu")
 md5sums=('SKIP')
 
 pkgver() {
-  cd mimarchlinux.$_pkgname
+  cd $_pkgname
   echo $(hg identify -n).$(hg identify -i)
 }
 
 build() {
-  cd $srcdir/mimarchlinux.$_pkgname
+  cd $srcdir/$_pkgname
   make
 }
 
 package() {
-  cd $srcdir/mimarchlinux.$_pkgname
+  cd $srcdir/$_pkgname
   make install DESTDIR="${pkgdir}/usr/"
 }
