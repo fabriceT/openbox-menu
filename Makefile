@@ -5,6 +5,9 @@ CC=gcc
 
 # Comment this line if you don't want icons to appear in menu
 CFLAGS+=-DWITH_ICONS
+# Uncomment this line if Openbox can display SVG icons 
+# Check SVG support with '$ ldd /usr/bin/openbox | grep svg', librsvg must appear..
+# CFLAGS+=-DWITH_SVG
 
 prefix= /usr/local
 DESTDIR ?= $(prefix)

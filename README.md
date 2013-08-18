@@ -20,10 +20,12 @@ Makefile and commenting the following line (add a # in the begining)
 If errors occur while compiling, remove gtk+-2.0 from lines above the one
 you have previously commented.
 
-# Installation of the menu in Openbox
+## SVG support
 
-This is done by editing `menu.xml`, it's located in ~/.config/openbox.
+Openbox can displays SVG icons since version 3.5.1. SVG support in openbox-menu
+has to be activated in Makefile by decommenting the following line
 
-First, you have to define your menu by adding this line:
-
+   CFLAGS+=-DWITH_SVG
+ 
+It will be activated by default in the future.
 

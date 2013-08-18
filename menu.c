@@ -188,8 +188,11 @@ get_item_icon_path (MenuCacheItem *item)
 		 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
 		 */
 		tmp_name = strndup (name, strrchr (name, '.') - name);
-
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);
+	#ifdef WITH_SVG
+		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_GENERIC_FALLBACK);
+	#else	
+		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);	
+	#endif
 		g_free (tmp_name);
 	}
 
@@ -201,7 +204,7 @@ get_item_icon_path (MenuCacheItem *item)
 
 	return icon;
 }
-#endif
+#endif /* WITH_ICONS */
 
 
 guint
