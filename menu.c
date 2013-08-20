@@ -569,7 +569,6 @@ main (int argc, char **argv)
 		g_main_loop_unref (loop);
 
 		menu_cache_remove_reload_notify (menu_cache, reload_notify_id);
-		g_free (reload_notify_id);
 	}
 
 	menu_cache_unref (menu_cache);
