@@ -1,8 +1,50 @@
+2013-08-20  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.5.0 for changeset c32044967c4d
+	[b11386081931] [tip]
+
+	* menu.c:
+	No need to free reload_notify_id, this is done by
+	menu_cache_remove_reload_notify.
+	[c32044967c4d] [v0.5.0]
+
+2013-08-18  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* archlinux/PKGBUILD:
+	removed from PKGBUILD.
+	[482c6b01756a]
+
+	* Makefile, README.md, menu.c:
+	Add SVG support. Documentation updated (the unfinished installation
+	section was dropped off).
+	[11f48b6a2f4b]
+
+	* README, README.md:
+	Documentation changed
+	[ea259bf1ef4d]
+
+2013-07-26  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* archlinux/PKGBUILD:
+	PKGBUILD updated for Bitbucket
+	[16fb2c617efb]
+
+2013-07-16  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.4.99 for changeset aec5f6b3bb4b
+	[2e6244b2b2fb]
+
+	* ChangeLog, openbox-menu.h:
+	Bump to 0.4.99
+	[aec5f6b3bb4b] [v0.4.99]
+
 2013-07-14  Fabrice THIROUX  <fabrice.thiroux@free.fr>
 
 	* Makefile:
 	Makefile: Add a test for xml output (xmllint)
-	[803dcfbcce0d] [tip]
+	[803dcfbcce0d]
 
 2013-07-13  Fabrice THIROUX  <fabrice.thiroux@free.fr>
 
