@@ -541,7 +541,8 @@ main (int argc, char **argv)
 
 	menu_cache_unref (menu_cache);
 	g_free (menu);
-	g_free (ob_context.output);
+	if (ob_context.output)
+		g_free (ob_context.output);
 
 	return ret;
 }
