@@ -353,6 +353,9 @@ generate_openbox_menu (MenuCacheDir *dir, OB_Menu *context)
  *   * file, the filename where the menu content should be written to.
  *     If file is 'NULL' then the menu content is displayed.
  *
+ * RETURNS
+ *    1 if error, 0 otherwise
+ *
  * NOTES
  *   A 16 KiB GString is allocated for the content of the pipemenu.
  *   This should be enough prevent too many allocations while building
@@ -361,14 +364,14 @@ generate_openbox_menu (MenuCacheDir *dir, OB_Menu *context)
  *   The size of the XML file created is around 8 KB in my computer but
  *   I don't have a lot of applications installed.
  ****/
-void
+gint
 display_menu (MenuCache *menu, OB_Menu *context)
 {
 	MenuCacheDir *dir = menu_cache_get_root_dir (menu);
 	if (G_UNLIKELY(dir == NULL))
 	{
 		g_warning ("Can't get menu root dir");
-		return;
+		return 1;
 	}
 
 	GSList *l = menu_cache_dir_get_children (dir);
@@ -397,9 +400,13 @@ display_menu (MenuCache *menu, OB_Menu *context)
 			g_print ("%s", buff);
 
 		g_free (buff);
+		return 0;
 	}
 	else
+	{
 		g_warning ("Cannot create menu, check if the .menu file is correct");
+		return 1;
+	}
 }
 
 
@@ -421,6 +428,8 @@ main (int argc, char **argv)
 	gchar   **app_menu = NULL;
 	gchar    *output = NULL;
 	gchar    *terminal = "xterm -e";
+	gint      ret;
+
 	/*
 	 * TODO: Registered OnlyShowIn Environments
 	 *  Ref: http://standards.freedesktop.org/menu-spec/latest/apb.html
@@ -508,7 +517,7 @@ main (int argc, char **argv)
 	}
 
 	// display the menu anyway
-	display_menu(menu_cache, &ob_context);
+	ret = display_menu(menu_cache, &ob_context);
 
 	if (persistent)
 	{
@@ -534,5 +543,5 @@ main (int argc, char **argv)
 	g_free (menu);
 	g_free (ob_context.output);
 
-	return 0;
+	return ret;
 }
