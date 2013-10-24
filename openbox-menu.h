@@ -1,6 +1,6 @@
 /*
  *      openbox-menu.h -  this file is part of openbox-menu
- *      Copyright (C) 2011,12 mimas <mimasgpc@free.fr>
+ *      Copyright (C) 2010-13 mimas <mimasgpc@free.fr>
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU Lesser General Public License as published

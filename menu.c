@@ -1,5 +1,5 @@
 //      openbox-menu - a dynamic menu for openbox
-//      Copyright (C) 2010-12 mimas <mimasgpc@free.fr>
+//      Copyright (C) 2010-13 mimas <mimasgpc@free.fr>
 //
 //      This program is free software; you can redistribute it and/or modify
 //      it under the terms of the GNU General Public License as published by
