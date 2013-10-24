@@ -409,6 +409,57 @@ display_menu (MenuCache *menu, OB_Menu *context)
 	}
 }
 
+/****f* openbox-menu/get_application_menu
+ * FUNCTION
+ *   Try to determine which menu file to use if none defined by user.
+ *   XDG_MENU_PREFIX variable exists, it is used to prefix menu name.
+ *
+ * RETURNS
+ *    a char that need to be freed by caller.
+ ****/
+gchar *
+get_application_menu (void)
+{
+	gchar menu[APPMENU_SIZE];
+
+	gchar *xdg_prefix = getenv("XDG_MENU_PREFIX");
+	if (xdg_prefix)
+	{
+		g_snprintf (menu, APPMENU_SIZE, "%sapplications.menu", xdg_prefix);
+	}
+	else
+		g_strlcpy (menu, "applications.menu", APPMENU_SIZE);
+
+	return strdup (menu);
+}
+
+
+/****f* openbox-menu/check_application_menu
+ * FUNCTION
+ *   Test if menu file exists.
+ *
+ * PARAMETER
+ *   * menu, a string containing the filename of the menu
+ *
+ * RETURNS
+ *    FALSE if menu file is not found. TRUE otherwise.
+ ****/
+gboolean
+check_application_menu (gchar *menu)
+{
+	gchar *menu_path = g_build_filename ("/etc","xdg", "menus", menu, NULL);
+	if (!g_file_test (menu_path, G_FILE_TEST_EXISTS))
+	{
+		g_print ("File %s doesn't exists. Can't create menu\n", menu_path);
+		g_free (menu_path);
+		return FALSE;
+	}
+	else
+	{
+		g_free (menu_path);
+		return TRUE;
+	}
+}
 
 
 int
@@ -506,9 +557,16 @@ main (int argc, char **argv)
 	if (show_xfce)  ob_context.show_flag |= SHOW_IN_XFCE;
 	if (show_rox)   ob_context.show_flag |= SHOW_IN_ROX;
 
+	if (!app_menu)
+		menu = get_application_menu ();
+	else
+		menu = strdup (*app_menu);
+
+	if (!check_application_menu (menu))
+		return 1;
 
 	// wait for the menu to get ready
-	MenuCache *menu_cache = menu_cache_lookup_sync (app_menu?*app_menu:"applications.menu");
+	MenuCache *menu_cache = menu_cache_lookup_sync (menu);
 	if (!menu_cache )
 	{
 		g_free (menu);
