@@ -470,6 +470,7 @@ main (int argc, char **argv)
 	GError *error = NULL;
 	gchar  *menu = NULL;
 	OB_Menu ob_context = { 0 };
+	MenuCache *menu_cache = NULL;
 
 	gboolean  show_gnome = FALSE;
 	gboolean  show_kde = FALSE;
@@ -565,20 +566,24 @@ main (int argc, char **argv)
 	if (!check_application_menu (menu))
 		return 1;
 
-	// wait for the menu to get ready
-	MenuCache *menu_cache = menu_cache_lookup_sync (menu);
-	if (!menu_cache )
+	if (!persistent) /* single shot */
 	{
-		g_free (menu);
-		g_warning ("Cannot connect to menu-cache :/");
-		return 1;
+		// wait for the menu to get ready
+		menu_cache = menu_cache_lookup_sync (menu);
+		if (!menu_cache )
+			goto _failed;
+
+		// display the menu anyway
+		ret = display_menu(menu_cache, &ob_context);
 	}
-
-	// display the menu anyway
-	ret = display_menu(menu_cache, &ob_context);
-
-	if (persistent)
+	else /* persistent mode */
 	{
+		// No need to get sync lookup. The callback function will be called
+		// when menu-cache is ready.
+		menu_cache = menu_cache_lookup (menu);
+		if (!menu_cache )
+			goto _failed;
+
 		// menucache used to reload the cache after a call to menu_cache_lookup* ()
 		// It's not true anymore with version >= 0.4.0.
 		reload_notify_id = menu_cache_add_reload_notify (menu_cache,
@@ -598,9 +603,17 @@ main (int argc, char **argv)
 	}
 
 	menu_cache_unref (menu_cache);
+
 	g_free (menu);
 	if (ob_context.output)
 		g_free (ob_context.output);
 
 	return ret;
+
+_failed:
+		// call to menu_cache_lookup* failed. Only menu needs to be
+		// freed.
+		g_free (menu);
+		g_warning ("Cannot connect to menu-cache :/");
+		return 1;
 }
