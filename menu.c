@@ -446,9 +446,8 @@ get_application_menu (void)
  *
  * NOTE
  *    User custom menu file can be used if XDG_CONFIG_DIRS is set, i.g
- *    'export XDG_CONFIG_DIRS="/home/user/.config/;/etc/xdg/" to use
- *    menu file located in /home/user/.config/menus or /etc/xdg/
- *    directories.
+ *    'export XDG_CONFIG_DIRS="$HOME/.config/:/etc/xdg/" to use
+ *    menu file located in $HOME/menus or /etc/xdg/ directories.
  ****/
 gboolean
 check_application_menu (gchar *menu)
