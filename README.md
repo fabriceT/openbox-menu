@@ -18,14 +18,27 @@ Makefile and commenting the following line (add a # in the begining)
    CFLAGS+=-DWITH_ICONS
 
 If errors occur while compiling, remove gtk+-2.0 from lines above the one
-you have previously commented.
+previously commented.
 
 ## SVG support
 
-Openbox can displays SVG icons since version 3.5.1. SVG support in openbox-menu
-has to be activated in Makefile by decommenting the following line
+Openbox can display SVG icons since version 3.5.1. SVG support in openbox-menu
+has to be activated in Makefile by uncommenting the following line
 
    CFLAGS+=-DWITH_SVG
- 
-It will be activated by default in the future.
 
+SVG suport will be activated by default in the future.
+
+# Settings
+
+## Default menu file
+
+If no menu file specified in the command line, openbox-menu will use
+"applications.menu" as default menu filename. If $XDG_MENU_PREFIX is set,
+openbox-menu uses its content to prefix "applications.menu".
+
+## User menu file
+
+Openbox-menu looks up for a valid menu file in /etc/xdg/menus directory.
+In order to make it looks up somewhere else, set up the $XDG_CONFIG_DIRS
+variable (don't suffix pathnames with "menus", it's automatically added).
