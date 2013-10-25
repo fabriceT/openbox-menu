@@ -21,6 +21,10 @@
 
 #define APPMENU_SIZE 30
 
+#ifndef __VERSION_MINOR // since menu-cache 0.5.0.
+#warning "If you are running a 0.3.x version of libmenu-cache, you need to compile the 3.6.7 version of openbox-menu"
+#endif
+
 guint app_is_visible(MenuCacheApp *, guint32);
 gchar *get_item_icon_path (MenuCacheItem*);
 
