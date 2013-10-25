@@ -443,22 +443,33 @@ get_application_menu (void)
  *
  * RETURNS
  *    FALSE if menu file is not found. TRUE otherwise.
+ *
+ * NOTE
+ *    User custom menu file can be used if XDG_CONFIG_DIRS is set, i.g
+ *    'export XDG_CONFIG_DIRS="/home/user/.config/;/etc/xdg/" to use
+ *    menu file located in /home/user/.config/menus or /etc/xdg/
+ *    directories.
  ****/
 gboolean
 check_application_menu (gchar *menu)
 {
-	gchar *menu_path = g_build_filename ("/etc","xdg", "menus", menu, NULL);
-	if (!g_file_test (menu_path, G_FILE_TEST_EXISTS))
+	const gchar * const *dir;
+	gchar *menu_path;
+
+	for (dir = g_get_system_config_dirs(); *dir ; dir++)
 	{
-		g_print ("File %s doesn't exists. Can't create menu\n", menu_path);
+		menu_path = g_build_filename (*dir, "menus", menu, NULL);
+		if (g_file_test (menu_path, G_FILE_TEST_EXISTS))
+		{
+			g_free (menu_path);
+			return TRUE;
+		}
+
 		g_free (menu_path);
-		return FALSE;
 	}
-	else
-	{
-		g_free (menu_path);
-		return TRUE;
-	}
+
+	g_print ("File %s doesn't exists. Can't create menu.\n", menu);
+	return FALSE;
 }
 
 
