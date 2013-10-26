@@ -42,3 +42,15 @@ openbox-menu uses its content to prefix "applications.menu".
 Openbox-menu looks up for a valid menu file in /etc/xdg/menus directory.
 In order to make it looks up somewhere else, set up the $XDG_CONFIG_DIRS
 variable (don't suffix pathnames with "menus", it's automatically added).
+
+For example, if $XDG_CONFIG_DIRS is set like this:
+
+  export XDG_CONFIG_DIRS="$HOME/.config:/etc/xdg"
+
+And openbox-menu is called this way:
+
+  openbox-menu my.menu
+
+Openbox-menu will check for "my.menu" (or "my.menu" prefixed by the value
+of $XDG_MENU_PREFIX) in "$HOME/.config/menus/" directory and, if the file
+doesn't exist here, in "/etc/xdg/menus/" directory.
