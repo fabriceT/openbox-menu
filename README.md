@@ -15,7 +15,7 @@ fact, the menu and the icons are displayed by Openbox; Openbox-menu
 only outputs text content). You can remove icon support by editing the
 Makefile and commenting the following line (add a # in the begining)
 
-   CFLAGS+=-DWITH_ICONS
+>  CFLAGS+=-DWITH_ICONS
 
 If errors occur while compiling, remove gtk+-2.0 from lines above the one
 previously commented.
@@ -25,7 +25,7 @@ previously commented.
 Openbox can display SVG icons since version 3.5.1. SVG support in openbox-menu
 has to be activated in Makefile by uncommenting the following line
 
-   CFLAGS+=-DWITH_SVG
+>  CFLAGS+=-DWITH_SVG
 
 SVG suport will be activated by default in the future.
 
@@ -45,11 +45,11 @@ variable (don't suffix pathnames with "menus", it's automatically added).
 
 For example, if $XDG_CONFIG_DIRS is set like this:
 
-  export XDG_CONFIG_DIRS="$HOME/.config:/etc/xdg"
+>  export XDG_CONFIG_DIRS="$HOME/.config:/etc/xdg"
 
 And openbox-menu is called this way:
 
-  openbox-menu my.menu
+>  openbox-menu my.menu
 
 Openbox-menu will check for "my.menu" (or "my.menu" prefixed by the value
 of $XDG_MENU_PREFIX) in "$HOME/.config/menus/" directory and, if the file
