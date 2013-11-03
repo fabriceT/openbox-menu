@@ -165,7 +165,8 @@ menu_display (MenuCache *menu, OB_Menu *context)
 	MenuCacheDir *dir = menu_cache_get_root_dir (menu);
 	if (G_UNLIKELY(dir == NULL))
 	{
-		g_warning ("Can't get menu root dir.");
+		g_warning ("Can't get menu root directory");
+		context->code = MENU_DIR_ERROR;
 		return;
 	}
 
@@ -199,7 +200,8 @@ menu_display (MenuCache *menu, OB_Menu *context)
 	}
 	else
 	{
-		g_warning ("Cannot create menu, check if the .menu file is correct");
+		g_warning ("Menu seems to be empty. Check openbox-menu parameters.");
+		context->code = MENU_EMPTY_ERROR;
 		return;
 	}
 }

@@ -29,6 +29,16 @@
 #warning "If you are running a 0.3.x version of libmenu-cache, you need to compile the 3.6.7 version of openbox-menu"
 #endif
 
+typedef enum {
+	NO_ERROR = 0,
+	CONFIG_ERROR,
+	MENU_DIR_ERROR,
+	MENU_EMPTY_ERROR,
+	LOOKUP_ERROR,
+	MENU_CACHE_ERROR,
+} OBM_Error;
+
+
 typedef struct {
 	/* Configuration */
 	gchar    *output;
@@ -40,6 +50,7 @@ typedef struct {
 	gboolean  no_icons;     /* icons disabled */
 	gboolean  persistent;
 	gchar    *menu_file;
+	guint     code;
 } OB_Menu;
 
 guint app_is_visible (MenuCacheApp *, guint32);

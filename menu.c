@@ -166,7 +166,7 @@ configure (int argc, char **argv)
 
 	if (error)
 	{
-		g_print ("%s\n", error->message);
+		g_warning ("%s\n", error->message);
 		g_error_free (error);
 		return NULL;
 	}
@@ -210,7 +210,7 @@ configure (int argc, char **argv)
 	return context;
 }
 
-gboolean
+guint
 run (OB_Menu *context)
 {
 	gpointer reload_notify_id = NULL;
@@ -221,8 +221,11 @@ run (OB_Menu *context)
 		// No need to get sync lookup. The callback function will be called
 		// when menu-cache is ready.
 		menu_cache = menu_cache_lookup (context->menu_file);
-		if (!menu_cache )
-			goto _failed;
+		if (!menu_cache)
+		{
+			g_warning ("Cannot connect to menu-cache :/");
+			return MENU_CACHE_ERROR;
+		}
 
 		// menucache used to reload the cache after a call to menu_cache_lookup* ()
 		// It's not true anymore with version >= 0.4.0.
@@ -246,18 +249,19 @@ run (OB_Menu *context)
 		// wait for the menu to get ready
 		menu_cache = menu_cache_lookup_sync (context->menu_file);
 		if (!menu_cache )
-			goto _failed;
+		{
+			g_warning ("Cannot connect to menu-cache :/");
+			return MENU_CACHE_ERROR;
+		}
 
 		// display the menu anyway
 		menu_display (menu_cache, context);
 	}
 
 	menu_cache_unref (menu_cache);
-	return FALSE;
 
-	_failed:
-		g_warning ("Cannot connect to menu-cache :/");
-		return TRUE;
+	// return error code set in callback function.
+	return context->code;
 }
 
 void
@@ -285,13 +289,13 @@ main (int argc, char **argv)
 	icon_theme = gtk_icon_theme_get_default ();
 #endif
 
-  if ((ob_context = configure (argc, argv)) == NULL)
-		return 1;
+	if ((ob_context = configure (argc, argv)) == NULL)
+		return CONFIG_ERROR;
 
 	if (!check_application_menu (ob_context->menu_file))
 	{
-		g_print ("File %s doesn't exists. Can't create menu.\n", ob_context->menu_file);
-		return 1;
+		g_print ("File %s doesn't exist. Can't create menu.\n", ob_context->menu_file);
+		return LOOKUP_ERROR;
 	}
 
 	guint ret = run (ob_context);
