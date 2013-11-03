@@ -374,6 +374,7 @@ display_menu (MenuCache *menu, OB_Menu *context)
 		return 1;
 	}
 
+	g_message ("display_menu begin");
 	GSList *l = menu_cache_dir_get_children (dir);
 
 	if (g_slist_length (l) != 0) {
@@ -471,26 +472,21 @@ check_application_menu (gchar *menu)
 	return FALSE;
 }
 
-
-int
-main (int argc, char **argv)
+OB_Menu *
+configure (int argc, char **argv)
 {
-
-	gpointer reload_notify_id = NULL;
-	GError *error = NULL;
-	gchar  *menu = NULL;
-	OB_Menu ob_context = { 0 };
-	MenuCache *menu_cache = NULL;
-
+	GError   *error = NULL;
+	gboolean  comment = FALSE;
+	gchar    *terminal_cmd = NULL;
+	gboolean  persistent = FALSE;
 	gboolean  show_gnome = FALSE;
 	gboolean  show_kde = FALSE;
 	gboolean  show_xfce = FALSE;
 	gboolean  show_rox = FALSE;
-	gboolean  persistent = FALSE;
-	gchar   **app_menu = NULL;
+	gboolean  no_icons = FALSE;
+	gboolean  sn = FALSE;
 	gchar    *output = NULL;
-	gchar    *terminal = "xterm -e";
-	gint      ret;
+	gchar   **app_menu = NULL;
 
 	/*
 	 * TODO: Registered OnlyShowIn Environments
@@ -508,33 +504,31 @@ main (int argc, char **argv)
 	 * Old   Legacy menu systems
 	 */
 	GOptionEntry entries[] = {
-		{ "comment",   'c', 0, G_OPTION_ARG_NONE, &ob_context.comment,
+		{ "comment",   'c', 0, G_OPTION_ARG_NONE,   &comment,
 		  "Show generic name instead of application name", NULL },
-		{ "terminal",  't', 0, G_OPTION_ARG_STRING, &terminal,
+		{ "terminal",  't', 0, G_OPTION_ARG_STRING, &terminal_cmd,
 		  "Terminal command (default xterm -e)", "cmd" },
-		{ "gnome",     'g', 0, G_OPTION_ARG_NONE, &show_gnome,
+		{ "gnome",     'g', 0, G_OPTION_ARG_NONE,   &show_gnome,
 		  "Show GNOME entries", NULL },
-		{ "kde",       'k', 0, G_OPTION_ARG_NONE, &show_kde,
-		  "Show KDE entries", NULL },
-		{ "xfce",      'x', 0, G_OPTION_ARG_NONE, &show_xfce,
-		  "Show XFCE entries", NULL },
-		{ "rox",       'r', 0, G_OPTION_ARG_NONE, &show_rox,
-		  "Show ROX entries", NULL },
-		{ "persistent",'p', 0, G_OPTION_ARG_NONE, &persistent,
-		  "stay active",    NULL },
-		{ "sn",        's', 0, G_OPTION_ARG_NONE, &ob_context.sn,
+		{ "kde",       'k', 0, G_OPTION_ARG_NONE,   &show_kde,
+		  "Show KDE entries",   NULL },
+		{ "xfce",      'x', 0, G_OPTION_ARG_NONE,   &show_xfce,
+		  "Show XFCE entries",  NULL },
+		{ "rox",       'r', 0, G_OPTION_ARG_NONE,   &show_rox,
+		  "Show ROX entries",   NULL },
+		{ "persistent",'p', 0, G_OPTION_ARG_NONE,   &persistent,
+		  "stay active",        NULL },
+		{ "sn",        's', 0, G_OPTION_ARG_NONE,   &sn,
 		  "Enable startup notification", NULL },
 		{ "output",    'o', 0, G_OPTION_ARG_STRING, &output,
 		  "file to write data to", NULL },
-		{ "noicons", 'i',   0, G_OPTION_ARG_NONE, &ob_context.no_icons,
+		{ "noicons", 'i',   0, G_OPTION_ARG_NONE,   &no_icons,
 		  "Don't display icons in menu", NULL },
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu,
 		  NULL, "[file.menu]" },
 		{NULL}
 	};
 	GOptionContext *help_context = NULL;
-
-	setlocale (LC_ALL, "");
 
 	help_context = g_option_context_new (" - Openbox menu generator " VERSION);
 	g_option_context_set_help_enabled (help_context, TRUE);
@@ -545,52 +539,83 @@ main (int argc, char **argv)
 	{
 		g_print ("%s\n", error->message);
 		g_error_free (error);
-		return 1;
+		return NULL;
 	}
 
+	OB_Menu *context = g_slice_new0 (OB_Menu);
+
+	if (show_gnome) context->show_flag |= SHOW_IN_GNOME;
+	if (show_kde)   context->show_flag |= SHOW_IN_KDE;
+	if (show_xfce)  context->show_flag |= SHOW_IN_XFCE;
+	if (show_rox)   context->show_flag |= SHOW_IN_ROX;
+
+	if (context->terminal_cmd)
+		context->terminal_cmd = terminal_cmd;
+	else
+		context->terminal_cmd = "xterm -e";
+
+	if (output)
+		context->output = g_build_filename (g_get_user_cache_dir (), output, NULL);
+	else
+		context->output =  NULL;
+
+	if (!app_menu)
+		context->menu_file = get_application_menu ();
+	else
+		context->menu_file = strdup (*app_menu);
+
+	if (persistent)
+		context->persistent = TRUE;
+
+	if (comment)
+		context->comment = TRUE;
+
 	g_option_context_free (help_context);
+
+	return context;
+}
+
+void
+context_free (OB_Menu *context)
+{
+	if (context->output)
+		g_free (context->output);
+
+	if (context->menu_file)
+		g_free (context->menu_file);
+
+	g_slice_free (OB_Menu, context);
+}
+
+
+int
+main (int argc, char **argv)
+{
+
+	gpointer reload_notify_id = NULL;
+	OB_Menu *ob_context;
+	MenuCache *menu_cache = NULL;
+
+	gint      ret;
+
+	setlocale (LC_ALL, "");
 
 #ifdef WITH_ICONS
 	gtk_init (&argc, &argv);
 	icon_theme = gtk_icon_theme_get_default ();
 #endif
 
-	if (output)
-		ob_context.output = g_build_filename (g_get_user_cache_dir (), output, NULL);
-	else
-		ob_context.output =  NULL;
-
-	if (terminal)
-		ob_context.terminal_cmd = terminal;
-
-	if (show_gnome) ob_context.show_flag |= SHOW_IN_GNOME;
-	if (show_kde)   ob_context.show_flag |= SHOW_IN_KDE;
-	if (show_xfce)  ob_context.show_flag |= SHOW_IN_XFCE;
-	if (show_rox)   ob_context.show_flag |= SHOW_IN_ROX;
-
-	if (!app_menu)
-		menu = get_application_menu ();
-	else
-		menu = strdup (*app_menu);
-
-	if (!check_application_menu (menu))
+  if ((ob_context = configure (argc, argv)) == NULL)
 		return 1;
 
-	if (!persistent) /* single shot */
-	{
-		// wait for the menu to get ready
-		menu_cache = menu_cache_lookup_sync (menu);
-		if (!menu_cache )
-			goto _failed;
+	if (!check_application_menu (ob_context->menu_file))
+		return 1;
 
-		// display the menu anyway
-		ret = display_menu(menu_cache, &ob_context);
-	}
-	else /* persistent mode */
+	if (ob_context->persistent) /* persistent mode */
 	{
 		// No need to get sync lookup. The callback function will be called
 		// when menu-cache is ready.
-		menu_cache = menu_cache_lookup (menu);
+		menu_cache = menu_cache_lookup (ob_context->menu_file);
 		if (!menu_cache )
 			goto _failed;
 
@@ -598,7 +623,7 @@ main (int argc, char **argv)
 		// It's not true anymore with version >= 0.4.0.
 		reload_notify_id = menu_cache_add_reload_notify (menu_cache,
 		                        (MenuCacheReloadNotify) display_menu,
-		                        &ob_context);
+		                        ob_context);
 
 		// install signals handler
 		signal (SIGTERM, sig_term_handler);
@@ -611,19 +636,23 @@ main (int argc, char **argv)
 
 		menu_cache_remove_reload_notify (menu_cache, reload_notify_id);
 	}
+	else
+	{ /* single shot */
+		// wait for the menu to get ready
+		menu_cache = menu_cache_lookup_sync (ob_context->menu_file);
+		if (!menu_cache )
+			goto _failed;
+
+		// display the menu anyway
+		ret = display_menu(menu_cache, ob_context);
+	}
 
 	menu_cache_unref (menu_cache);
-
-	g_free (menu);
-	if (ob_context.output)
-		g_free (ob_context.output);
-
+	context_free (ob_context);
 	return ret;
 
 _failed:
-		// call to menu_cache_lookup* failed. Only menu needs to be
-		// freed.
-		g_free (menu);
+		context_free (ob_context);
 		g_warning ("Cannot connect to menu-cache :/");
 		return 1;
 }

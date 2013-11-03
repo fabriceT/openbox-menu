@@ -37,4 +37,6 @@ typedef struct {
 	gboolean  comment;      /* display description instead of name */
 	gboolean  sn;           /* startup notification */
 	gboolean  no_icons;     /* icons disabled */
+	gboolean  persistent;
+	gchar    *menu_file;
 } OB_Menu;
