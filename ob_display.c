@@ -228,7 +228,7 @@ menu_add_footer (GString *builder, gchar *filename)
 void
 menu_display (MenuCache *menu, OB_Menu *context)
 {
-	MenuCacheDir *dir = menu_cache_get_root_dir (menu);
+	MenuCacheDir *dir = menu_cache_dup_root_dir (menu);
 	if (G_UNLIKELY(dir == NULL))
 	{
 		g_warning ("Can't get menu root directory");
@@ -258,12 +258,12 @@ menu_display (MenuCache *menu, OB_Menu *context)
 			g_print ("%s", buff);
 
 		g_free (buff);
-		return;
 	}
 	else
 	{
 		g_warning ("Menu seems to be empty. Check openbox-menu parameters.");
 		context->code = MENU_EMPTY_ERROR;
-		return;
 	}
+
+	menu_cache_item_unref (MENU_CACHE_ITEM(dir));
 }
