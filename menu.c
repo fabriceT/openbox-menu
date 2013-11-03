@@ -45,7 +45,7 @@ void sig_term_handler (int sig)
  *   Try to determine which menu file to use if none defined by user.
  *   XDG_MENU_PREFIX variable exists, it is used to prefix menu name.
  *
- * RETURNS
+ *  RETURN VALUE
  *    a char that need to be freed by caller.
  ****/
 gchar *
@@ -69,13 +69,13 @@ get_application_menu (void)
  * FUNCTION
  *   Test if menu file exists.
  *
- * PARAMETER
+ * PARAMETERS
  *   * menu, a string containing the filename of the menu
  *
- * RETURNS
+ * RETURN VALUE
  *    FALSE if menu file is not found. TRUE otherwise.
  *
- * NOTE
+ * NOTES
  *    User custom menu file can be used if XDG_CONFIG_DIRS is set, i.g
  *    'export XDG_CONFIG_DIRS="$HOME/.config/:/etc/xdg/" to use
  *    menu file located in $HOME/menus or /etc/xdg/ directories.
@@ -113,6 +113,8 @@ configure (int argc, char **argv)
 	gboolean  show_xfce = FALSE;
 	gboolean  show_rox = FALSE;
 	gboolean  no_icons = FALSE;
+	gchar    *header = NULL;
+	gchar    *footer = NULL;
 	gboolean  sn = FALSE;
 	gchar    *output = NULL;
 	gchar   **app_menu = NULL;
@@ -151,6 +153,10 @@ configure (int argc, char **argv)
 		  "Enable startup notification", NULL },
 		{ "output",    'o', 0, G_OPTION_ARG_STRING, &output,
 		  "file to write data to", NULL },
+		{ "header",    'H', 0, G_OPTION_ARG_STRING, &header,
+		  "Use filename as pipe-menu header", NULL },
+		{ "footer",    'F', 0, G_OPTION_ARG_STRING, &footer,
+		  "Use filename as pipe-menu footer", NULL },
 		{ "noicons", 'i',   0, G_OPTION_ARG_NONE,   &no_icons,
 		  "Don't display icons in menu", NULL },
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu,
@@ -204,6 +210,12 @@ configure (int argc, char **argv)
 		context->menu_file = get_application_menu ();
 	else
 		context->menu_file = strdup (*app_menu);
+
+	if (header)
+		context->header_file = header;
+
+	if (footer)
+		context->footer_file = footer;
 
 	g_option_context_free (help_context);
 

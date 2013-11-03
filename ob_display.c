@@ -17,7 +17,7 @@
 
 #include "openbox-menu.h"
 
-/****f* openbox-menu/menu_directory
+/****f* ob_display/menu_directory
  * FUNCTION
  *   create a menu entry for a directory.
  *
@@ -52,7 +52,7 @@ menu_directory (MenuCacheApp *dir, OB_Menu *context)
 	g_free (dir_name);
 }
 
-/****f* openbox-menu/menu_application
+/****f* ob_display/menu_application
  * FUNCTION
  *   create a menu entry for an application.
  ****/
@@ -107,7 +107,7 @@ menu_application (MenuCacheApp *app, OB_Menu *context)
 	g_free (exec_cmd);
 }
 
-/****f* openbox-menu/menu_generate
+/****f* ob_display/menu_generate
  * FUNCTION
  *   main routine of menu creation.
  *
@@ -138,7 +138,73 @@ menu_generate (MenuCacheDir *dir, OB_Menu *context)
 		}
 }
 
-/****f* openbox-menu/menu_display
+
+/****f* ob_display/menu_add_header
+ * FUNCTION
+ *   Add a header to XML openbox-menu XML output
+ *
+ * INPUTS
+ *   * builder, a GString builder
+ *   * filename, the file containing the header content.
+ ****/
+void
+menu_add_header (GString *builder, gchar *filename)
+{
+	gchar *content = NULL;
+
+	if (filename)
+	{
+		if (g_file_get_contents (filename, &content, NULL, NULL))
+		{
+			g_string_append (builder, content);
+			g_free (content);
+			return;
+		}
+		else
+		{
+			g_warning ("Can't load header file %s", filename);
+		}
+	}
+
+	g_string_append (builder,
+	    "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
+	    "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+	    "  xsi:schemaLocation=\"http://openbox.org/"
+	    "  file:///usr/share/openbox/menu.xsd\">\n");
+}
+
+/****f* ob_display/menu_add_footer
+ * FUNCTION
+ *   Add a footer to XML openbox-menu XML output
+ *
+ * INPUTS
+ *   * builder, a GString builder
+ *   * filename, the file containing the footer content.
+ ****/
+void
+menu_add_footer (GString *builder, gchar *filename)
+{
+	gchar *content = NULL;
+
+	if (filename)
+	{
+		if (g_file_get_contents (filename, &content, NULL, NULL))
+		{
+			g_string_append (builder, content);
+			g_free (content);
+			return;
+		}
+		else
+		{
+			g_warning ("Can't load footer file %s", filename);
+		}
+	}
+
+	g_string_append (builder,
+	    "</openbox_pipe_menu>\n");
+}
+
+/****f* ob_display/menu_display
  * FUNCTION
  *   it begins and closes the menu content, write it into a file or
  *   display it.
@@ -148,7 +214,7 @@ menu_generate (MenuCacheDir *dir, OB_Menu *context)
  *   * file, the filename where the menu content should be written to.
  *     If file is 'NULL' then the menu content is displayed.
  *
- *  RETURNS:
+ * RETURN VALUE
  *    Nothing. A MenuCacheReloadNotify callback returns void.
  *
  * NOTES
@@ -174,13 +240,9 @@ menu_display (MenuCache *menu, OB_Menu *context)
 
 	if (g_slist_length (l) != 0) {
 		context->builder = g_string_sized_new (16 * 1024);
-		g_string_append (context->builder,
-		    "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
-	        "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-	        "  xsi:schemaLocation=\"http://openbox.org/"
-	        "  file:///usr/share/openbox/menu.xsd\">\n");
+		menu_add_header (context->builder, context->header_file);
 		menu_generate (dir, context);
-		g_string_append (context->builder, "</openbox_pipe_menu>");
+		menu_add_footer (context->builder, context->footer_file);
 
 		gchar *buff = g_string_free (context->builder, FALSE);
 

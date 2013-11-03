@@ -23,7 +23,7 @@
 
 #include "openbox-menu.h"
 
-/****f* openbox-menu/safe_name
+/****f* utils/safe_name
  * FUNCTION
  *   Convert &, <, > and " signs to html entities
  *
@@ -61,7 +61,7 @@ safe_name (const char *name)
 }
 
 
-/****f* openbox-menu/clean_exec
+/****f* utils/clean_exec
  * FUNCTION
  *   Remove %f, %F, %u, %U, %i, %c, %k from exec field.
  *   None of theses codes are interesting to manage here.
@@ -141,7 +141,7 @@ clean_exec (MenuCacheApp *app)
 
 extern GtkIconTheme *icon_theme;
 
-/****f* openbox-menu/item_icon_path
+/****f* utils/item_icon_path
  * OUTPUT
  *   return the path for the themed icon if item.
  *   If no icon found, it returns the "empty" icon path.

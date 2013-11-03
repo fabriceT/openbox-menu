@@ -50,6 +50,8 @@ typedef struct {
 	gboolean  no_icons;     /* icons disabled */
 	gboolean  persistent;
 	gchar    *menu_file;
+	gchar    *header_file;
+	gchar    *footer_file;
 	guint     code;
 } OB_Menu;
 
