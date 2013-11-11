@@ -167,6 +167,7 @@ menu_add_header (GString *builder, gchar *filename)
 	}
 
 	g_string_append (builder,
+	    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" 
 	    "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
 	    "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 	    "  xsi:schemaLocation=\"http://openbox.org/"
