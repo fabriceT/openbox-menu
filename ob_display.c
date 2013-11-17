@@ -17,6 +17,13 @@
 
 #include "openbox-menu.h"
 
+const gchar *default_template =
+    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+    "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
+    "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+    "  xsi:schemaLocation=\"http://openbox.org/"
+    ">%MENU%</openbox_pipe_menu>\n";
+
 /****f* ob_display/menu_directory
  * FUNCTION
  *   create a menu entry for a directory.
@@ -139,70 +146,32 @@ menu_generate (MenuCacheDir *dir, OB_Menu *context)
 }
 
 
-/****f* ob_display/menu_add_header
+/****f* ob_display/get_header_footer_from_template
  * FUNCTION
- *   Add a header to XML openbox-menu XML output
+ *   Get header and footer string from a template file. If no template
+ *   file provided, the default template will bu used.
  *
  * INPUTS
- *   * builder, a GString builder
- *   * filename, the file containing the header content.
- ****/
-void
-menu_add_header (GString *builder, gchar *filename)
-{
-	gchar *content = NULL;
-
-	if (filename)
-	{
-		if (g_file_get_contents (filename, &content, NULL, NULL))
-		{
-			g_string_append (builder, content);
-			g_free (content);
-			return;
-		}
-		else
-		{
-			g_warning ("Can't load header file %s", filename);
-		}
-	}
-
-	g_string_append (builder,
-	    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" 
-	    "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
-	    "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-	    "  xsi:schemaLocation=\"http://openbox.org/"
-	    "  file:///usr/share/openbox/menu.xsd\">\n");
-}
-
-/****f* ob_display/menu_add_footer
- * FUNCTION
- *   Add a footer to XML openbox-menu XML output
+ *   * template
  *
- * INPUTS
- *   * builder, a GString builder
- *   * filename, the file containing the footer content.
+ * RETURN VALUE
+ *   * a pointer to an array of strings that needs to be freed with g_strfreev.
  ****/
-void
-menu_add_footer (GString *builder, gchar *filename)
+gchar **get_header_footer_from_template (gchar *template)
 {
 	gchar *content = NULL;
+	gchar **tokens = NULL;
 
-	if (filename)
+	if (template && g_file_get_contents (template, &content, NULL, NULL))
 	{
-		if (g_file_get_contents (filename, &content, NULL, NULL))
-		{
-			g_string_append (builder, content);
-			g_free (content);
-			return;
-		}
-		else
-		{
-			g_warning ("Can't load footer file %s", filename);
-		}
+		tokens = g_strsplit (content, "%MENU%", 2);
+		g_free (content);
 	}
-
-	g_string_append (builder,
-	    "</openbox_pipe_menu>\n");
+	else
+	{
+		tokens = g_strsplit (default_template, "%MENU%", 2);
+	}
+	return tokens;
 }
 
 /****f* ob_display/menu_display
@@ -229,6 +198,8 @@ menu_add_footer (GString *builder, gchar *filename)
 void
 menu_display (MenuCache *menu, OB_Menu *context)
 {
+	gchar **template_parts = NULL;
+
 	MenuCacheDir *dir = menu_cache_dup_root_dir (menu);
 	if (G_UNLIKELY(dir == NULL))
 	{
@@ -241,9 +212,15 @@ menu_display (MenuCache *menu, OB_Menu *context)
 
 	if (g_slist_length (l) != 0) {
 		context->builder = g_string_sized_new (16 * 1024);
-		menu_add_header (context->builder, context->header_file);
+
+		template_parts = get_header_footer_from_template (context->template);
+		// TODO: check if template_parts array contains 2 strings.
+
+		g_string_append (context->builder, template_parts[0]); // add header
 		menu_generate (dir, context);
-		menu_add_footer (context->builder, context->footer_file);
+		g_string_append (context->builder, template_parts[1]); // add footer
+
+		g_strfreev (template_parts);
 
 		gchar *buff = g_string_free (context->builder, FALSE);
 

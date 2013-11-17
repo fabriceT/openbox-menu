@@ -113,8 +113,7 @@ configure (int argc, char **argv)
 	gboolean  show_xfce = FALSE;
 	gboolean  show_rox = FALSE;
 	gboolean  no_icons = FALSE;
-	gchar    *header = NULL;
-	gchar    *footer = NULL;
+	gchar    *template = NULL;
 	gboolean  sn = FALSE;
 	gchar    *output = NULL;
 	gchar   **app_menu = NULL;
@@ -153,10 +152,8 @@ configure (int argc, char **argv)
 		  "Enable startup notification", NULL },
 		{ "output",    'o', 0, G_OPTION_ARG_STRING, &output,
 		  "file to write data to", NULL },
-		{ "header",    'H', 0, G_OPTION_ARG_STRING, &header,
-		  "Use filename as pipe-menu header", NULL },
-		{ "footer",    'F', 0, G_OPTION_ARG_STRING, &footer,
-		  "Use filename as pipe-menu footer", NULL },
+		{ "template",    'T', 0, G_OPTION_ARG_STRING, &template,
+		  "Use filename as template for openbox-menu output", NULL },
 		{ "noicons", 'i',   0, G_OPTION_ARG_NONE,   &no_icons,
 		  "Don't display icons in menu", NULL },
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu,
@@ -211,11 +208,8 @@ configure (int argc, char **argv)
 	else
 		context->menu_file = strdup (*app_menu);
 
-	if (header)
-		context->header_file = header;
-
-	if (footer)
-		context->footer_file = footer;
+	if (template)
+		context->template = template;
 
 	g_option_context_free (help_context);
 
