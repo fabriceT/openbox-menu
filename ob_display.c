@@ -21,7 +21,7 @@ const gchar *default_template =
     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
     "<openbox_pipe_menu xmlns=\"http://openbox.org/\""
     "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-    "  xsi:schemaLocation=\"http://openbox.org/ >"
+    "  xsi:schemaLocation=\"http://openbox.org/\" >"
     "%MENU%</openbox_pipe_menu>\n";
 
 /****f* ob_display/menu_directory
