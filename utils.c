@@ -51,7 +51,7 @@ safe_name (const char *name)
 				g_string_append (cmd, "&gt;");
 				break;
 			case '"':
-				g_string_append (cmd, "&quote;");
+				g_string_append (cmd, "&quot;");
 				break;
 			default:
 				g_string_append_c (cmd, *name);
