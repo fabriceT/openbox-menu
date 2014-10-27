@@ -56,6 +56,7 @@ get_application_menu (void)
 	gchar *xdg_prefix = getenv("XDG_MENU_PREFIX");
 	if (xdg_prefix)
 	{
+		g_warning ("XDG_MENU_PREFIX environment variable set, this could prevent the menu from loading. Unset it if an error happens");
 		g_snprintf (menu, APPMENU_SIZE, "%sapplications.menu", xdg_prefix);
 	}
 	else
