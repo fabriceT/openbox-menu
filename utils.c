@@ -81,6 +81,9 @@ clean_exec (MenuCacheApp *app)
 {
 	gchar *filepath = NULL;
 	const char *exec = menu_cache_app_get_exec (MENU_CACHE_APP(app));
+
+	g_return_val_if_fail(exec,"");
+		
 	GString *cmd = g_string_sized_new (64);
 
 	for (;*exec; ++exec)
