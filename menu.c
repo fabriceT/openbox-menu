@@ -113,6 +113,7 @@ configure (int argc, char **argv)
 	gboolean  show_kde = FALSE;
 	gboolean  show_xfce = FALSE;
 	gboolean  show_rox = FALSE;
+	gboolean  show_unknown = FALSE;
 	gboolean  no_icons = FALSE;
 	gchar    *template = NULL;
 	gboolean  sn = FALSE;
@@ -147,6 +148,8 @@ configure (int argc, char **argv)
 		  "Show XFCE entries",  NULL },
 		{ "rox",       'r', 0, G_OPTION_ARG_NONE,   &show_rox,
 		  "Show ROX entries",   NULL },
+		{ "unknown",   'u', 0, G_OPTION_ARG_NONE,   &show_unknown,
+		  "Show Unknown deskstop entries",   NULL },
 		{ "persistent",'p', 0, G_OPTION_ARG_NONE,   &persistent,
 		  "stay active",        NULL },
 		{ "sn",        's', 0, G_OPTION_ARG_NONE,   &sn,
@@ -182,10 +185,11 @@ configure (int argc, char **argv)
 	else
 		context->output =  NULL;
 
-	if (show_gnome) context->show_flag |= SHOW_IN_GNOME;
-	if (show_kde)   context->show_flag |= SHOW_IN_KDE;
-	if (show_xfce)  context->show_flag |= SHOW_IN_XFCE;
-	if (show_rox)   context->show_flag |= SHOW_IN_ROX;
+	if (show_gnome)   context->show_flag |= SHOW_IN_GNOME;
+	if (show_kde)     context->show_flag |= SHOW_IN_KDE;
+	if (show_xfce)    context->show_flag |= SHOW_IN_XFCE;
+	if (show_rox)     context->show_flag |= SHOW_IN_ROX;
+	if (show_unknown) context->show_flag |= N_KNOWN_DESKTOPS;
 
 	if (terminal_cmd)
 		context->terminal_cmd = terminal_cmd;

@@ -1,13 +1,203 @@
+2014-10-27  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.7.0 for changeset 3c78153fc3cb
+	[3daf21c3b626] [tip]
+
+	* openbox-menu.h:
+	Change version to 0.7.0 as it targets menu-cache 0.7.0
+	[3c78153fc3cb] [v0.7.0]
+
+	* menu.c:
+	Warn if XDG_MENU_PREFIX is set. This cause trouble with menu-cache
+	0.7
+	[b42fd73621d6]
+
+	* utils.c:
+	Won't crash if menu entry doesn't have exec key (thanks LStranger)
+	[6a67e27a21a6]
+
+2014-05-30  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* utils.c:
+	Fix quote XML entity name, it is obviously named &quot;
+	[414186d93f26]
+
+2013-11-30  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.5.1 for changeset d03ae08b6710
+	[d8857e942f8c]
+
+	* .hgtags:
+	Removed tag v0.5.1
+	[d03ae08b6710] [v0.5.1]
+
+	* ob_display.c:
+	Fix missing double quote (issue #3)
+	[2c8ef0cbc8f4]
+
+2013-11-24  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* .hgtags:
+	Added tag v0.5.1 for changeset ffbe369c5cbd
+	[728467bbe0e6]
+
+	* openbox-menu.h:
+	Bump to 0.5.1
+	[ffbe369c5cbd]
+
+	* README.md:
+	Documentation updated
+	[abc31487545b]
+
+2013-11-17  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* ob_display.c:
+	small change in XML template.
+	[a3176b559389]
+
+	* menu.c, ob_display.c, openbox-menu.h:
+	Header and footer flags were removed. A XML template can be used
+	instead (-T flags).
+	[f2e2f8aa7463]
+
+2013-11-11  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* README.md:
+	Documentation correction
+	[bb1d0bc4df6c]
+
+	* ob_display.c:
+	XML definition header added
+	[51972bddb66a]
+
+2013-11-09  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* README.md:
+	line feeds removed in documentation
+	[9329bcdd2b23]
+
+	* README.md:
+	Add custom header and footer section in documentation
+	[e5f33a1cc4b3]
+
+2013-11-04  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* TODO:
+	TODO updated
+	[cf2a78005b52]
+
+2013-11-03  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* ob_display.c:
+	Drop menu_cache_get_root_dir as it is marked as deprecated since
+	0.3.4
+	[50f75e1603d5]
+
+	* menu.c, ob_display.c, openbox-menu.h, utils.c:
+	Header and footer of the pipe-menu may be customize by user with -H
+	and -F parameters. Minor changes in doc
+	[2b97a171fdff]
+
+	* menu.c, ob_display.c, openbox-menu.h:
+	Error code retreived from callback
+	[62e9c9e90c59]
+
+	* menu.c, ob_display.c, openbox-menu.h, utils.c:
+	Cold and rainy day: big changes in code
+	[7ff8f172d1f3]
+
+	* menu.c, openbox-menu.h:
+	Use of a context to configure the program
+	[0a9c0f5aac1b]
+
+2013-10-26  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* README.md:
+	Markdown syntax modification
+	[fb3d86453f1b]
+
+	* README.md:
+	Example added in documentation
+	[ead077817a39]
+
+2013-10-25  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* README.md:
+	README update
+	[21d95458fade]
+
+	* openbox-menu.h:
+	A sort of version check added in order to inform user of older
+	version of menu-cache during compilation
+	[40f2d7b6d415]
+
+	* menu.c:
+	Changes in check_application_menu documentation
+	[04e8f25ac257]
+
+	* menu.c:
+	Openbox can use user custom menus.
+
+	XDG_CONFIG_DIRS is used to set ordered base directories for
+	configuration as defined in XDG base directory specification.
+	[e113bcf53407]
+
+2013-10-24  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* menu.c, openbox-menu.h:
+	date updated
+	[4d3588e67180]
+
+	* menu.c:
+	menu_cache_lookup is called when openbox-menu is ran in persistent
+	mode.
+	[6c35466488e3]
+
+	* menu.c:
+	get_application_menu 2: the return.
+	[3a02f28aff65]
+
+2013-10-17  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* menu.c:
+	free output variable only if it is allocated
+	[86e1c4b18cdd]
+
+	* menu.c:
+	Fix bad propagated error return
+	[409a1bb496e4]
+
+2013-10-16  Fabrice THIROUX  <fabrice.thiroux@free.fr>
+
+	* menu.c:
+	Remove tests on xdg menu files asLibmenu-cache seems to take care of
+	non-existent files and XDG_PREFIX value.
+	[82f72f650e44]
+
 2013-08-20  Fabrice THIROUX  <fabrice.thiroux@free.fr>
 
 	* .hgtags:
+	Added tag v0.5.0 for changeset 4974c50d687e
+	[0e52ecf29860]
+
+	* ChangeLog, openbox-menu.h:
+	Definitively the 0.5.0 version.
+	[4974c50d687e] [v0.5.0]
+
+	* .hgtags:
+	Removed tag v0.5.0
+	[3705bd7152a7]
+
+	* .hgtags:
 	Added tag v0.5.0 for changeset c32044967c4d
-	[b11386081931] [tip]
+	[b11386081931]
 
 	* menu.c:
 	No need to free reload_notify_id, this is done by
 	menu_cache_remove_reload_notify.
-	[c32044967c4d] [v0.5.0]
+	[c32044967c4d]
 
 2013-08-18  Fabrice THIROUX  <fabrice.thiroux@free.fr>
 
