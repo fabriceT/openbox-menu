@@ -21,7 +21,7 @@
 #define __OPENBOXMENU_APP__
 #include <menu-cache.h>
 
-#define VERSION "0.7.0"
+#define VERSION "0.8.0"
 #define APPMENU_SIZE 30
 #define TERMINAL_CMD "xterm -e"
 
