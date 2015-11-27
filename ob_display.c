@@ -208,6 +208,11 @@ menu_display (MenuCache *menu, OB_Menu *context)
 		return;
 	}
 
+	// Desktops are dynamically detected by menu_cache when reloading
+	// its cache. It is now time to add our desktop to the show_flag in
+	// the application context.
+	add_current_desktop_to_context (menu, context);
+
 	GSList *l = menu_cache_dir_get_children (dir);
 
 	if (g_slist_length (l) != 0) {

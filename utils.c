@@ -205,3 +205,27 @@ app_is_visible(MenuCacheApp *app, guint32 de_flag)
 	else
 		return menu_cache_app_get_is_visible(MENU_CACHE_APP(app), de_flag);
 }
+
+const char* get_desktop_name(gchar** env) {
+	const gchar *desktop = g_environ_getenv (env, "XDG_CURRENT_DESKTOP");
+	if (desktop)
+		return desktop;
+
+	desktop = g_environ_getenv (env, "DESKTOP_SESSION");
+	if (desktop)
+		return desktop;
+
+	// We return nothing.
+	return NULL;
+}
+
+void
+add_current_desktop_to_context (MenuCache *menu, OB_Menu *context) {
+	gchar **environ = g_get_environ();
+	const char* desktop = get_desktop_name (environ);
+	if (desktop) {
+		context->show_flag |= menu_cache_get_desktop_env_flag(menu, desktop);
+	}
+	g_print ("%d", context->show_flag);
+}
+

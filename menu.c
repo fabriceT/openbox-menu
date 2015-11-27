@@ -185,12 +185,14 @@ configure (int argc, char **argv)
 	else
 		context->output =  NULL;
 
+	// We add extra desktop entries to display.
+	// Our current desktop is set when menu_cache has loaded its own cache.
+	// (likely in menu_display function).
 	if (show_gnome)   context->show_flag |= SHOW_IN_GNOME;
 	if (show_kde)     context->show_flag |= SHOW_IN_KDE;
 	if (show_xfce)    context->show_flag |= SHOW_IN_XFCE;
 	if (show_rox)     context->show_flag |= SHOW_IN_ROX;
-	// N_KNOWN_DESKTOPS value is probably '1 << 5' instead of '5'
-	if (show_unknown) context->show_flag |= 1 << 5; // was N_KNOWN_DESKTOPS;
+	if (show_unknown) context->show_flag |= 1 << N_KNOWN_DESKTOPS;
 
 	if (terminal_cmd)
 		context->terminal_cmd = terminal_cmd;
