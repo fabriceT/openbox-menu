@@ -117,21 +117,6 @@ configure (int argc, char **argv)
 	gchar    *output = NULL;
 	gchar   **app_menu = NULL;
 
-	/*
-	 * TODO: Registered OnlyShowIn Environments
-	 *  Ref: http://standards.freedesktop.org/menu-spec/latest/apb.html
-	 *
-	 * GNOME GNOME Desktop
-	 * KDE   KDE Desktop
-	 * LXDE  LXDE Desktop
-	 * MATE  MATÉ Desktop
-	 * Razor Razor-qt Desktop
-	 * ROX   ROX Desktop
-	 * TDE   Trinity Desktop
-	 * Unity Unity Shell
-	 * XFCE  XFCE Desktop
-	 * Old   Legacy menu systems
-	 */
 	GOptionEntry entries[] = {
 		{ "comment",   'c', 0, G_OPTION_ARG_NONE,   &comment,
 		  "Show generic name instead of application name", NULL },
