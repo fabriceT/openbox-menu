@@ -226,6 +226,5 @@ add_current_desktop_to_context (MenuCache *menu, OB_Menu *context) {
 	if (desktop) {
 		context->show_flag |= menu_cache_get_desktop_env_flag(menu, desktop);
 	}
-	g_print ("%d", context->show_flag);
 }
 
