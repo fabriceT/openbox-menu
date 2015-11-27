@@ -39,33 +39,6 @@ void sig_term_handler (int sig)
 	g_main_loop_quit (loop);
 }
 
-
-/****f* openbox-menu/get_application_menu
- * FUNCTION
- *   Try to determine which menu file to use if none defined by user.
- *   XDG_MENU_PREFIX variable exists, it is used to prefix menu name.
- *
- *  RETURN VALUE
- *    a char that need to be freed by caller.
- ****/
-gchar *
-get_application_menu (void)
-{
-	gchar menu[APPMENU_SIZE];
-
-	gchar *xdg_prefix = getenv("XDG_MENU_PREFIX");
-	if (xdg_prefix)
-	{
-		g_warning ("XDG_MENU_PREFIX environment variable set, this could prevent the menu from loading. Unset it if an error happens");
-		g_snprintf (menu, APPMENU_SIZE, "%sapplications.menu", xdg_prefix);
-	}
-	else
-		g_strlcpy (menu, "applications.menu", APPMENU_SIZE);
-
-	return strdup (menu);
-}
-
-
 /****f* openbox-menu/check_application_menu
  * FUNCTION
  *   Test if menu file exists.
@@ -211,8 +184,9 @@ configure (int argc, char **argv)
 	if (persistent)
 		context->persistent = TRUE;
 
+	g_unsetenv("XDG_MENU_PREFIX"); // For unknow reason, it doesn't work when it is set.
 	if (!app_menu)
-		context->menu_file = get_application_menu ();
+		context->menu_file = "applications.menu";
 	else
 		context->menu_file = strdup (*app_menu);
 
