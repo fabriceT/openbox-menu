@@ -140,7 +140,7 @@ menu_generate (MenuCacheDir *dir, OB_Menu *context)
 				break;
 
 			case MENU_CACHE_TYPE_APP:
-				if (app_is_visible (MENU_CACHE_APP(l->data), 0))
+				if (app_is_visible (MENU_CACHE_APP(l->data), context->show_flag))
 					menu_application (l->data, context);
 		}
 }

@@ -189,7 +189,8 @@ configure (int argc, char **argv)
 	if (show_kde)     context->show_flag |= SHOW_IN_KDE;
 	if (show_xfce)    context->show_flag |= SHOW_IN_XFCE;
 	if (show_rox)     context->show_flag |= SHOW_IN_ROX;
-	if (show_unknown) context->show_flag |= N_KNOWN_DESKTOPS;
+	// N_KNOWN_DESKTOPS value is probably '1 << 5' instead of '5'
+	if (show_unknown) context->show_flag |= 1 << 5; // was N_KNOWN_DESKTOPS;
 
 	if (terminal_cmd)
 		context->terminal_cmd = terminal_cmd;
