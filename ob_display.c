@@ -59,6 +59,34 @@ menu_directory (MenuCacheApp *dir, OB_Menu *context)
 	g_free (dir_name);
 }
 
+gchar* get_item_comment (MenuCacheItem*, gboolean);
+
+gchar*
+get_item_name (MenuCacheItem* item, gboolean alternate)
+{
+   char* s = safe_name (menu_cache_item_get_name(item));
+   
+   if (s == NULL && alternate == TRUE) {
+       return get_item_comment(item, FALSE);
+   }
+   
+   return s;
+}
+
+
+gchar*
+get_item_comment (MenuCacheItem* item, gboolean alternate)
+{
+   char* s = safe_name (menu_cache_item_get_comment(item));
+   
+   if (s == NULL && alternate == TRUE) {
+       return get_item_name(item, FALSE);
+   } 
+   
+   return s;
+}
+
+
 /****f* ob_display/menu_application
  * FUNCTION
  *   create a menu entry for an application.
@@ -71,10 +99,8 @@ menu_application (MenuCacheApp *app, OB_Menu *context)
 	gchar *exec_cmd = NULL;
 
 	/* is comment (description) or name displayed ? */
-	if (context->comment && menu_cache_item_get_comment (MENU_CACHE_ITEM(app)))
-		exec_name = safe_name (menu_cache_item_get_comment (MENU_CACHE_ITEM(app)));
-	else
-		exec_name = safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(app)));
+	exec_name = (context->comment == TRUE) ? 
+        get_item_comment (MENU_CACHE_ITEM(app), TRUE) : get_item_name (MENU_CACHE_ITEM(app), TRUE);
 
 	exec_cmd = clean_exec (app);
 
