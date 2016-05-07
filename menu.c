@@ -292,7 +292,7 @@ main (int argc, char **argv)
 
 	if (!check_application_menu (ob_context->menu_file))
 	{
-		g_print ("File %s doesn't exist. Can't create menu.\n", ob_context->menu_file);
+		g_print ("File $XDG_CONFIG_DIRS/%s doesn't exist. Can't create menu.\n", ob_context->menu_file);
 		return LOOKUP_ERROR;
 	}
 
