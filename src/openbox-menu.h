@@ -58,6 +58,7 @@ typedef struct {
 	guint     code;
 } OB_Menu;
 
+gchar *get_default_application_menu ();
 guint app_is_visible (MenuCacheApp *, guint32);
 gchar *clean_exec (MenuCacheApp *);
 gchar *safe_name (const char *);

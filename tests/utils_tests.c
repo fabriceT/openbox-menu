@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <glib.h>
+#include <string.h>
 
 #include "../src/openbox-menu.h"
 
@@ -28,3 +29,20 @@ void test_safename3()
 	g_assert_null(filename);
 }
 */
+
+void test_application_menu_with_prefix()
+{
+	g_setenv("XDG_MENU_PREFIX", "mytest-", TRUE);
+	gchar* result = get_default_application_menu();
+
+	g_assert_cmpstr(result, ==, "mytest-applications.menu");
+}
+
+void test_application_menu_without_prefix()
+{
+	g_unsetenv("XDG_MENU_PREFIX");
+	gchar* result = get_default_application_menu();
+
+	g_assert_cmpstr(result, ==, "applications.menu");
+}
+
