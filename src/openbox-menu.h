@@ -21,6 +21,10 @@
 #define __OPENBOXMENU_APP__
 #include <menu-cache.h>
 
+#ifdef WITH_ICONS
+	#include <gtk/gtk.h>
+#endif
+
 #define VERSION "0.8.0"
 #define APPMENU_SIZE 30
 #define TERMINAL_CMD "xterm -e"
@@ -62,5 +66,10 @@ guint32 get_current_desktop_flag ();
 void add_current_desktop_to_context (MenuCache *, OB_Menu *);
 
 void menu_display (MenuCache *, OB_Menu *);
+
+
+#ifdef WITH_ICONS
+	GtkIconTheme *icon_theme;
+#endif
 
 #endif // __OPENBOXMENU_APP__

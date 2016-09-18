@@ -18,9 +18,6 @@
 #include <stdio.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#ifdef WITH_ICONS
-	#include <gtk/gtk.h>
-#endif
 #include <signal.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -28,9 +25,6 @@
 #include "openbox-menu.h"
 
 GMainLoop *loop = NULL;
-#ifdef WITH_ICONS
-	GtkIconTheme *icon_theme;
-#endif
 
 /* from lxsession */
 void sig_term_handler (int sig)
