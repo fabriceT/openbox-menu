@@ -132,7 +132,7 @@ configure (int argc, char **argv)
 		return NULL;
 	}
 
-	OB_Menu *context = g_slice_new0 (OB_Menu);
+	OB_Menu *context = context_new();
 
 	if (output)
 		context->output = g_build_filename (g_get_user_cache_dir (), output, NULL);
@@ -142,19 +142,15 @@ configure (int argc, char **argv)
 	// We add extra desktop entries to display.
 	// Our current desktop is set when menu_cache has loaded its own cache.
 	// (likely in menu_display function).
-	if (show_gnome)   context->show_flag |= SHOW_IN_GNOME;
-	if (show_kde)     context->show_flag |= SHOW_IN_KDE;
-	if (show_xfce)    context->show_flag |= SHOW_IN_XFCE;
-	if (show_rox)     context->show_flag |= SHOW_IN_ROX;
-	if (show_unknown) context->show_flag |= 1 << N_KNOWN_DESKTOPS;
+	if (show_gnome)   context_add_desktop_flag(context, SHOW_IN_GNOME);
+	if (show_kde)     context_add_desktop_flag(context, SHOW_IN_KDE);
+	if (show_xfce)    context_add_desktop_flag(context, SHOW_IN_XFCE);
+	if (show_rox)     context_add_desktop_flag(context, SHOW_IN_GNOME);
+	if (show_unknown) context_add_desktop_flag(context, 1 << N_KNOWN_DESKTOPS);
 
-	if (terminal_cmd)
-		context->terminal_cmd = terminal_cmd;
-	else
-		context->terminal_cmd = TERMINAL_CMD;
+	context_set_terminal_cmd (context, (terminal_cmd) ? terminal_cmd : TERMINAL_CMD);
 
-	if (comment)
-		context->comment = TRUE;
+	context_set_comment(comment);
 
 	if (sn)
 		context->sn = TRUE;
@@ -232,18 +228,6 @@ run (OB_Menu *context)
 
 	// return error code set in callback function.
 	return context->code;
-}
-
-void
-context_free (OB_Menu *context)
-{
-	if (context->output)
-		g_free (context->output);
-
-	if (context->menu_file)
-		g_free (context->menu_file);
-
-	g_slice_free (OB_Menu, context);
 }
 
 
