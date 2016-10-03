@@ -58,7 +58,8 @@ get_default_application_menu (void)
 gchar *
 safe_name (const char *name)
 {
-	g_return_val_if_fail (name != NULL, NULL);
+	if (name == NULL)
+		return NULL;
 
 	GString *cmd = g_string_sized_new (256);
 

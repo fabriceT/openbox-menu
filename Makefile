@@ -41,8 +41,8 @@ install:
 doc:
 	robodoc --src . --doc doc/ --multidoc --index --html --cmode
 
-check: $(TEST_OBJ) src/utils.o
-	$(CC) src/utils.o  $(TEST_OBJ) $(LDFLAGS) $(LIBS) -o check
+check: $(TEST_OBJ) src/utils.o src/context.o
+	$(CC) src/utils.o src/context.o $(TEST_OBJ) $(LDFLAGS) $(LIBS) -o check
 	gtester --verbose check
 
 xmllint: openbox-menu

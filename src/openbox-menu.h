@@ -58,6 +58,7 @@ typedef struct {
 	guint     code;
 } OB_Menu;
 
+
 gchar *get_default_application_menu ();
 guint app_is_visible (MenuCacheApp *, guint32);
 gchar *clean_exec (MenuCacheApp *);
@@ -68,6 +69,16 @@ void add_current_desktop_to_context (MenuCache *, OB_Menu *);
 
 void menu_display (MenuCache *, OB_Menu *);
 
+OB_Menu *context_new();
+void   context_set_terminal_cmd (OB_Menu*, gchar*);
+gchar *context_get_terminal_cmd (OB_Menu*);
+void   context_set_desktop_flag (OB_Menu*, int);
+void   context_add_desktop_flag (OB_Menu*, int);
+int    context_get_desktop_flag (OB_Menu*);
+void   context_set_persistent (OB_Menu*, gboolean);
+gboolean context_get_persistent (OB_Menu*);
+
+void context_free(OB_Menu *);
 
 #ifdef WITH_ICONS
 	GtkIconTheme *icon_theme;

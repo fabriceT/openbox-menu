@@ -1,7 +1,7 @@
-#include <stdio.h>
+//#include <stdio.h>
 
 #include <glib.h>
-#include <string.h>
+//#include <string.h>
 
 #include "../src/openbox-menu.h"
 
@@ -21,14 +21,14 @@ void test_safename2()
 	g_assert_cmpstr(filename, ==, "&amp;&lt;&gt;&quot;");
 }
 
-/*
+
 void test_safename3()
 {
 	char* filename = safe_name(NULL);
 
-	g_assert_null(filename);
+	g_assert (filename == NULL);
 }
-*/
+
 
 void test_application_menu_with_prefix()
 {
@@ -45,4 +45,5 @@ void test_application_menu_without_prefix()
 
 	g_assert_cmpstr(result, ==, "applications.menu");
 }
+
 
