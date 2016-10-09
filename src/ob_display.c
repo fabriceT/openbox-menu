@@ -65,11 +65,11 @@ gchar*
 get_item_name (MenuCacheItem* item, gboolean alternate)
 {
    char* s = safe_name (menu_cache_item_get_name(item));
-   
+
    if (s == NULL && alternate == TRUE) {
        return get_item_comment(item, FALSE);
    }
-   
+
    return s;
 }
 
@@ -78,11 +78,11 @@ gchar*
 get_item_comment (MenuCacheItem* item, gboolean alternate)
 {
    char* s = safe_name (menu_cache_item_get_comment(item));
-   
+
    if (s == NULL && alternate == TRUE) {
        return get_item_name(item, FALSE);
-   } 
-   
+   }
+
    return s;
 }
 
@@ -99,10 +99,14 @@ menu_application (MenuCacheApp *app, OB_Menu *context)
 	gchar *exec_cmd = NULL;
 
 	/* is comment (description) or name displayed ? */
-	exec_name = (context->comment == TRUE) ? 
+	exec_name = (context->comment == TRUE) ?
         get_item_comment (MENU_CACHE_ITEM(app), TRUE) : get_item_name (MENU_CACHE_ITEM(app), TRUE);
 
 	exec_cmd = clean_exec (app);
+	// make sure we don't process item with no exec value (issue #13). This should never happend.
+	if (exec_cmd == NULL){
+		return;
+	}
 
 #ifdef WITH_ICONS
 	if (!context->no_icons)
