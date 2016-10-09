@@ -97,9 +97,6 @@ context_free (OB_Menu *context)
 	if (context->output)
 		g_free (context->output);
 
-	if (context->builder)
-		g_free (context->builder);
-
 	if (context->menu_file)
 		g_free (context->menu_file);
 
