@@ -150,7 +150,7 @@ configure (int argc, char **argv)
 
 	context_set_terminal_cmd (context, (terminal_cmd) ? terminal_cmd : TERMINAL_CMD);
 
-	context_set_comment(comment);
+	context_set_comment(context, comment);
 
 	if (sn)
 		context->sn = TRUE;

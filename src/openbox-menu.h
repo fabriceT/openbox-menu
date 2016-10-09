@@ -76,6 +76,8 @@ void   context_set_desktop_flag (OB_Menu*, int);
 void   context_add_desktop_flag (OB_Menu*, int);
 int    context_get_desktop_flag (OB_Menu*);
 void   context_set_persistent (OB_Menu*, gboolean);
+void   context_set_persistent (OB_Menu*, gboolean);
+void   context_set_comment (OB_Menu*, gboolean);
 gboolean context_get_persistent (OB_Menu*);
 
 void context_free(OB_Menu *);
