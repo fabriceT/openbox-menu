@@ -3,7 +3,7 @@
 
 _pkgname=openbox-menu
 pkgname=$_pkgname-hg
-pkgver=66.35d948d8b998
+pkgver=145.b1a5465f74d0
 pkgrel=1
 pkgdesc="Dynamic XDG menu for openbox"
 arch=('i686' 'x86_64')
