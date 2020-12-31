@@ -82,8 +82,4 @@ gboolean context_get_persistent (OB_Menu*);
 
 void context_free(OB_Menu *);
 
-#ifdef WITH_ICONS
-	GtkIconTheme *icon_theme;
-#endif
-
 #endif // __OPENBOXMENU_APP__
