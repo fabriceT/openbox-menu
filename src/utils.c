@@ -18,6 +18,7 @@
 #include <glib.h>
 #ifdef WITH_ICONS
 	#include <gtk/gtk.h>
+	GtkIconTheme *icon_theme;
 #endif
 #include <string.h>
 #include <stdlib.h>
