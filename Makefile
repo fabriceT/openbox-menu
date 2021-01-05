@@ -16,10 +16,7 @@ BINDIR= ${DESTDIR}/bin
 SRC= $(shell ls src/*.c 2> /dev/null)
 OBJ= $(SRC:.c=.o)
 
-TESTS_SRC= $(shell ls tests/*.c 2> /dev/null)
-TEST_OBJ= $(TESTS_SRC:.c=.o)
-
-all: $(OBJ) $(TEST_OBJ) check openbox-menu
+all: $(OBJ) check openbox-menu
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -40,10 +37,6 @@ install:
 
 doc:
 	robodoc --src . --doc doc/ --multidoc --index --html --cmode
-
-check: $(TEST_OBJ) src/utils.o src/context.o
-	$(CC) src/utils.o src/context.o $(TEST_OBJ) $(LDFLAGS) $(LIBS) -o check
-	gtester --verbose check
 
 xmllint: openbox-menu
 	./openbox-menu > test.xml
