@@ -25,7 +25,7 @@
 	#include <gtk/gtk.h>
 #endif
 
-#define VERSION "0.8.0"
+#define VERSION "0.8.1"
 #define APPMENU_SIZE 30
 #define TERMINAL_CMD "xterm -e"
 
