@@ -6,17 +6,17 @@ Type `make` then, with superuser privileges, `make install` to install it. openb
 
 ## Compile openbox-menu without icons ##
 
-Openbox-menu shows icons before categories name and applications name (in fact, the menu and the icons are displayed by Openbox; Openbox-menu only outputs text content). You can remove icon support by editing the Makefile and commenting the following line (add a # in the begining)
+Openbox-menu shows icons before categories name and applications name (in fact, the menu and the icons are displayed by Openbox; Openbox-menu only outputs text content). You can enable icon support by running `make` with `WITH_ICONS=1` option (pass `WITH_ICONS=0` to disable it):
 
->  CFLAGS+=-DWITH_ICONS
+>  make WITH_ICONS=1
 
 If errors occur while compiling, remove gtk+-2.0 from lines above the one previously commented.
 
 ## SVG support
 
-Openbox can display SVG icons since version 3.5.1. SVG support in openbox-menu has to be activated in Makefile by uncommenting the following line
+Openbox can display SVG icons since version 3.5.1. SVG support in openbox-menu can be enabled by running `make` with `WITH_SVG=1` option (pass `WITH_SVG=0` to disable it):
 
->  CFLAGS+=-DWITH_SVG
+>  make WITH_SVG=1
 
 SVG suport will be activated by default in the future.
 
