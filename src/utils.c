@@ -169,8 +169,6 @@ clean_exec (MenuCacheApp *app)
 
 #if WITH_ICONS
 
-extern GtkIconTheme *icon_theme;
-
 /****f* utils/item_icon_path
  * OUTPUT
  *   return the path for the themed icon if item.
@@ -199,23 +197,21 @@ item_icon_path (MenuCacheItem *item)
 		if (g_path_is_absolute (name))
 			return g_strdup (name);
 
-		/*  We remove the file extension as gtk_icon_theme_lookup_icon can't
-		 *  lookup a theme icon for, ie, 'geany.png'. It has to be 'geany'.
-		 */
-		tmp_name = strndup (name, strrchr (name, '.') - name);
 	#ifdef WITH_SVG
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_GENERIC_FALLBACK);
+		icon_info = gtk_icon_theme_lookup_icon (gtk_icon_theme_get_default(), name, 16, GTK_ICON_LOOKUP_GENERIC_FALLBACK);
 	#else
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, tmp_name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);
+		icon_info = gtk_icon_theme_lookup_icon (gtk_icon_theme_get_default(), name, 16, GTK_ICON_LOOKUP_NO_SVG | GTK_ICON_LOOKUP_GENERIC_FALLBACK);
 	#endif
 		g_free (tmp_name);
 	}
 
+
+
 	if (!icon_info) /* 2nd fallback */
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, "empty", 16, GTK_ICON_LOOKUP_NO_SVG);
+		icon_info = gtk_icon_theme_lookup_icon (gtk_icon_theme_get_default (), "empty", 16, GTK_ICON_LOOKUP_NO_SVG);
 
 	icon = g_strdup (gtk_icon_info_get_filename (icon_info));
-	gtk_icon_info_free (icon_info);
+	g_object_unref (icon_info);
 
 	return icon;
 }

@@ -19,6 +19,7 @@
 
 #ifndef __OPENBOXMENU_APP__
 #define __OPENBOXMENU_APP__
+
 #include <menu-cache.h>
 
 #ifdef WITH_ICONS
