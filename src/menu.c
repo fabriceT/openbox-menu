@@ -103,7 +103,7 @@ configure (int argc, char **argv)
 		{ "rox",       'r', 0, G_OPTION_ARG_NONE,   &show_rox,
 		  "Show ROX entries",   NULL },
 		{ "unknown",   'u', 0, G_OPTION_ARG_NONE,   &show_unknown,
-		  "Show Unknown deskstop entries",   NULL },
+		  "Show Unknown desktop entries",   NULL },
 		{ "persistent",'p', 0, G_OPTION_ARG_NONE,   &persistent,
 		  "Stay active",        NULL },
 		{ "sn",        's', 0, G_OPTION_ARG_NONE,   &sn,
