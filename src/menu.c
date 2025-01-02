@@ -27,10 +27,10 @@
 GMainLoop *loop = NULL;
 
 /* from lxsession */
-void sig_term_handler (int sig)
+void sig_term_handler(int sig)
 {
-	g_warning ("Aborting");
-	g_main_loop_quit (loop);
+    g_warning("Aborting");
+    g_main_loop_quit(loop);
 }
 
 
@@ -51,207 +51,242 @@ void sig_term_handler (int sig)
  *    menu file located in $HOME/menus or /etc/xdg/ directories.
  ****/
 gboolean
-check_application_menu (gchar *menu)
+check_application_menu(gchar *menu)
 {
-	const gchar * const *dir;
-	gchar *menu_path;
+    const gchar * const *dir;
+    gchar *menu_path;
 
-	for (dir = g_get_system_config_dirs(); *dir ; dir++)
-	{
-		menu_path = g_build_filename (*dir, "menus", menu, NULL);
-		if (g_file_test (menu_path, G_FILE_TEST_EXISTS))
-		{
-			g_free (menu_path);
-			return TRUE;
-		}
+    for (dir = g_get_system_config_dirs(); *dir ; dir++)
+        {
+            menu_path = g_build_filename(*dir, "menus", menu, NULL);
 
-		g_free (menu_path);
-	}
+            if (g_file_test(menu_path, G_FILE_TEST_EXISTS))
+                {
+                    g_free(menu_path);
+                    return TRUE;
+                }
 
-	return FALSE;
+            g_free(menu_path);
+        }
+
+    return FALSE;
 }
 
 OB_Menu *
-configure (int argc, char **argv)
+configure(int argc, char **argv)
 {
-	GError   *error = NULL;
-	gboolean  comment = FALSE;
-	gchar    *terminal_cmd = NULL;
-	gboolean  persistent = FALSE;
-	gboolean  show_gnome = FALSE;
-	gboolean  show_kde = FALSE;
-	gboolean  show_xfce = FALSE;
-	gboolean  show_rox = FALSE;
-	gboolean  show_unknown = FALSE;
-	gboolean  no_icons = FALSE;
-	gchar    *template = NULL;
-	gboolean  sn = FALSE;
-	gchar    *output = NULL;
-	gchar   **app_menu = NULL;
+    GError   *error = NULL;
+    gboolean  comment = FALSE;
+    gchar    *terminal_cmd = NULL;
+    gboolean  persistent = FALSE;
+    gboolean  show_gnome = FALSE;
+    gboolean  show_kde = FALSE;
+    gboolean  show_xfce = FALSE;
+    gboolean  show_rox = FALSE;
+    gboolean  show_unknown = FALSE;
+    gboolean  no_icons = FALSE;
+    gchar    *template = NULL;
+    gboolean  sn = FALSE;
+    gchar    *output = NULL;
+    gchar   **app_menu = NULL;
 
-	GOptionEntry entries[] = {
-		{ "comment",   'c', 0, G_OPTION_ARG_NONE,   &comment,
-		  "Show generic name instead of application name", NULL },
-		{ "terminal",  't', 0, G_OPTION_ARG_STRING, &terminal_cmd,
-		  "Terminal command (default xterm -e)", "cmd" },
-		{ "gnome",     'g', 0, G_OPTION_ARG_NONE,   &show_gnome,
-		  "Show GNOME entries", NULL },
-		{ "kde",       'k', 0, G_OPTION_ARG_NONE,   &show_kde,
-		  "Show KDE entries",   NULL },
-		{ "xfce",      'x', 0, G_OPTION_ARG_NONE,   &show_xfce,
-		  "Show XFCE entries",  NULL },
-		{ "rox",       'r', 0, G_OPTION_ARG_NONE,   &show_rox,
-		  "Show ROX entries",   NULL },
-		{ "unknown",   'u', 0, G_OPTION_ARG_NONE,   &show_unknown,
-		  "Show Unknown desktop entries",   NULL },
-		{ "persistent",'p', 0, G_OPTION_ARG_NONE,   &persistent,
-		  "Stay active",        NULL },
-		{ "sn",        's', 0, G_OPTION_ARG_NONE,   &sn,
-		  "Enable startup notification", NULL },
-		{ "output",    'o', 0, G_OPTION_ARG_STRING, &output,
-		  "File to write data to", NULL },
-		{ "template",    'T', 0, G_OPTION_ARG_STRING, &template,
-		  "Use filename as template for openbox-menu output", NULL },
-		{ "noicons", 'i',   0, G_OPTION_ARG_NONE,   &no_icons,
-		  "Don't display icons in menu", NULL },
-		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu,
-		  NULL, "[file.menu]" },
-		{NULL}
-	};
-	GOptionContext *help_context = NULL;
+    GOptionEntry entries[] =
+    {
+        {
+            "comment",   'c', 0, G_OPTION_ARG_NONE,   &comment,
+            "Show generic name instead of application name", NULL
+        },
+        {
+            "terminal",  't', 0, G_OPTION_ARG_STRING, &terminal_cmd,
+            "Terminal command (default xterm -e)", "cmd"
+        },
+        {
+            "gnome",     'g', 0, G_OPTION_ARG_NONE,   &show_gnome,
+            "Show GNOME entries", NULL
+        },
+        {
+            "kde",       'k', 0, G_OPTION_ARG_NONE,   &show_kde,
+            "Show KDE entries",   NULL
+        },
+        {
+            "xfce",      'x', 0, G_OPTION_ARG_NONE,   &show_xfce,
+            "Show XFCE entries",  NULL
+        },
+        {
+            "rox",       'r', 0, G_OPTION_ARG_NONE,   &show_rox,
+            "Show ROX entries",   NULL
+        },
+        {
+            "unknown",   'u', 0, G_OPTION_ARG_NONE,   &show_unknown,
+            "Show Unknown desktop entries",   NULL
+        },
+        {
+            "persistent", 'p', 0, G_OPTION_ARG_NONE,   &persistent,
+            "Stay active",        NULL
+        },
+        {
+            "sn",        's', 0, G_OPTION_ARG_NONE,   &sn,
+            "Enable startup notification", NULL
+        },
+        {
+            "output",    'o', 0, G_OPTION_ARG_STRING, &output,
+            "File to write data to", NULL
+        },
+        {
+            "template",    'T', 0, G_OPTION_ARG_STRING, &template,
+            "Use filename as template for openbox-menu output", NULL
+        },
+        {
+            "noicons", 'i',   0, G_OPTION_ARG_NONE,   &no_icons,
+            "Don't display icons in menu", NULL
+        },
+        {
+            G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &app_menu,
+            NULL, "[file.menu]"
+        },
+        {NULL}
+    };
+    GOptionContext *help_context = NULL;
 
-	help_context = g_option_context_new (" - Openbox menu generator " VERSION);
-	g_option_context_set_help_enabled (help_context, TRUE);
-	g_option_context_add_main_entries (help_context, entries, NULL);
-	g_option_context_parse (help_context, &argc, &argv, &error);
+    help_context = g_option_context_new(" - Openbox menu generator " VERSION);
+    g_option_context_set_help_enabled(help_context, TRUE);
+    g_option_context_add_main_entries(help_context, entries, NULL);
+    g_option_context_parse(help_context, &argc, &argv, &error);
 
-	if (error)
-	{
-		g_warning ("%s\n", error->message);
-		g_error_free (error);
-		return NULL;
-	}
+    if (error)
+        {
+            g_warning("%s\n", error->message);
+            g_error_free(error);
+            return NULL;
+        }
 
-	OB_Menu *context = context_new();
+    OB_Menu *context = context_new();
 
-	if (output)
-		context->output = g_build_filename (g_get_user_cache_dir (), output, NULL);
-	else
-		context->output =  NULL;
+    if (output)
+        context->output = g_build_filename(g_get_user_cache_dir(), output, NULL);
+    else
+        context->output =  NULL;
 
-	// We add extra desktop entries to display.
-	// Our current desktop is set when menu_cache has loaded its own cache.
-	// (likely in menu_display function).
-	if (show_gnome)   context_add_desktop_flag(context, SHOW_IN_GNOME);
-	if (show_kde)     context_add_desktop_flag(context, SHOW_IN_KDE);
-	if (show_xfce)    context_add_desktop_flag(context, SHOW_IN_XFCE);
-	if (show_rox)     context_add_desktop_flag(context, SHOW_IN_GNOME);
-	if (show_unknown) context_add_desktop_flag(context, 1 << N_KNOWN_DESKTOPS);
+    // We add extra desktop entries to display.
+    // Our current desktop is set when menu_cache has loaded its own cache.
+    // (likely in menu_display function).
+    if (show_gnome)   context_add_desktop_flag(context, SHOW_IN_GNOME);
 
-	context_set_terminal_cmd (context, (terminal_cmd) ? terminal_cmd : TERMINAL_CMD);
+    if (show_kde)     context_add_desktop_flag(context, SHOW_IN_KDE);
 
-	context_set_comment(context, comment);
+    if (show_xfce)    context_add_desktop_flag(context, SHOW_IN_XFCE);
 
-	if (sn)
-		context->sn = TRUE;
+    if (show_rox)     context_add_desktop_flag(context, SHOW_IN_GNOME);
 
-	if (no_icons)
-		context->no_icons = TRUE;
+    if (show_unknown) context_add_desktop_flag(context, 1 << N_KNOWN_DESKTOPS);
 
-	if (persistent)
-		context->persistent = TRUE;
+    context_set_terminal_cmd(context, (terminal_cmd) ? terminal_cmd : TERMINAL_CMD);
 
-	if (!app_menu)
-		context->menu_file = get_default_application_menu();
-	else
-		context->menu_file = strdup (*app_menu);
+    context_set_comment(context, comment);
 
-	if (template)
-		context->template = template;
+    if (sn)
+        context->sn = TRUE;
 
-	g_option_context_free (help_context);
+    if (no_icons)
+        context->no_icons = TRUE;
 
-	return context;
+    if (persistent)
+        context->persistent = TRUE;
+
+    if (!app_menu)
+        context->menu_file = get_default_application_menu();
+    else
+        context->menu_file = strdup(*app_menu);
+
+    if (template)
+        context->template = template;
+
+    g_option_context_free(help_context);
+
+    return context;
 }
 
 guint
-run (OB_Menu *context)
+run(OB_Menu *context)
 {
-	gpointer reload_notify_id = NULL;
-	MenuCache *menu_cache = NULL;
+    gpointer reload_notify_id = NULL;
+    MenuCache *menu_cache = NULL;
 
-	g_unsetenv("XDG_MENU_PREFIX"); // For unknow reason, it doesn't work when it is set.
+    g_unsetenv("XDG_MENU_PREFIX"); // For unknow reason, it doesn't work when it is set.
 
-	if (context->persistent) /* persistent mode */
-	{
-		// No need to get sync lookup. The callback function will be called
-		// when menu-cache is ready.
-		menu_cache = menu_cache_lookup (context->menu_file);
-		if (!menu_cache)
-		{
-			g_warning ("Cannot connect to menu-cache :/");
-			return MENU_CACHE_ERROR;
-		}
+    if (context->persistent)   /* persistent mode */
+        {
+            // No need to get sync lookup. The callback function will be called
+            // when menu-cache is ready.
+            menu_cache = menu_cache_lookup(context->menu_file);
 
-		// menucache used to reload the cache after a call to menu_cache_lookup* ()
-		// It's not true anymore with version >= 0.4.0.
-		reload_notify_id = menu_cache_add_reload_notify (menu_cache,
-		                        (MenuCacheReloadNotify) menu_display,
-		                        context);
+            if (!menu_cache)
+                {
+                    g_warning("Cannot connect to menu-cache :/");
+                    return MENU_CACHE_ERROR;
+                }
 
-		// install signals handler
-		signal (SIGTERM, sig_term_handler);
-		signal (SIGINT, sig_term_handler);
+            // menucache used to reload the cache after a call to menu_cache_lookup* ()
+            // It's not true anymore with version >= 0.4.0.
+            reload_notify_id = menu_cache_add_reload_notify(menu_cache,
+                               (MenuCacheReloadNotify) menu_display,
+                               context);
 
-		// run main loop
-		loop = g_main_loop_new (NULL, FALSE);
-		g_main_loop_run (loop);
-		g_main_loop_unref (loop);
+            // install signals handler
+            signal(SIGTERM, sig_term_handler);
+            signal(SIGINT, sig_term_handler);
 
-		menu_cache_remove_reload_notify (menu_cache, reload_notify_id);
-	}
-	else
-	{ /* single shot */
-		// wait for the menu to get ready
-		menu_cache = menu_cache_lookup_sync (context->menu_file);
-		if (!menu_cache )
-		{
-			g_warning ("Cannot connect to menu-cache :/");
-			return MENU_CACHE_ERROR;
-		}
+            // run main loop
+            loop = g_main_loop_new(NULL, FALSE);
+            g_main_loop_run(loop);
+            g_main_loop_unref(loop);
 
-		// display the menu anyway
-		menu_display (menu_cache, context);
-	}
+            menu_cache_remove_reload_notify(menu_cache, reload_notify_id);
+        }
+    else
+        {
+            /* single shot */
+            // wait for the menu to get ready
+            menu_cache = menu_cache_lookup_sync(context->menu_file);
 
-	menu_cache_unref (menu_cache);
+            if (!menu_cache)
+                {
+                    g_warning("Cannot connect to menu-cache :/");
+                    return MENU_CACHE_ERROR;
+                }
 
-	// return error code set in callback function.
-	return context->code;
+            // display the menu anyway
+            menu_display(menu_cache, context);
+        }
+
+    menu_cache_unref(menu_cache);
+
+    // return error code set in callback function.
+    return context->code;
 }
 
 
 int
-main (int argc, char **argv)
+main(int argc, char **argv)
 {
-	OB_Menu *ob_context;
+    OB_Menu *ob_context;
 
-	setlocale (LC_ALL, "");
+    setlocale(LC_ALL, "");
 
 #ifdef WITH_ICONS
-	gtk_init (&argc, &argv);
+    gtk_init(&argc, &argv);
 #endif
 
-	if ((ob_context = configure (argc, argv)) == NULL)
-		return CONFIG_ERROR;
+    if ((ob_context = configure(argc, argv)) == NULL)
+        return CONFIG_ERROR;
 
-	if (!check_application_menu (ob_context->menu_file))
-	{
-		g_print ("File $XDG_CONFIG_DIRS/%s doesn't exist. Can't create menu.\n", ob_context->menu_file);
-		return LOOKUP_ERROR;
-	}
+    if (!check_application_menu(ob_context->menu_file))
+        {
+            g_print("File $XDG_CONFIG_DIRS/%s doesn't exist. Can't create menu.\n", ob_context->menu_file);
+            return LOOKUP_ERROR;
+        }
 
-	guint ret = run (ob_context);
-	context_free (ob_context);
-	return ret;
+    guint ret = run(ob_context);
+    context_free(ob_context);
+    return ret;
 }

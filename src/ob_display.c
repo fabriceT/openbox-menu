@@ -32,58 +32,61 @@ const gchar *default_template =
  *   this menu entry has to be closed by "</menu>".
  ****/
 void
-menu_directory (MenuCacheApp *dir, OB_Menu *context)
+menu_directory(MenuCacheApp *dir, OB_Menu *context)
 {
-	gchar *dir_id = safe_name (menu_cache_item_get_id (MENU_CACHE_ITEM(dir)));
-	gchar *dir_name = safe_name (menu_cache_item_get_name (MENU_CACHE_ITEM(dir)));
+    gchar *dir_id = safe_name(menu_cache_item_get_id(MENU_CACHE_ITEM(dir)));
+    gchar *dir_name = safe_name(menu_cache_item_get_name(MENU_CACHE_ITEM(dir)));
 
 #ifdef WITH_ICONS
-	if (!context->no_icons)
-	{
-		gchar *dir_icon = item_icon_path (MENU_CACHE_ITEM(dir));
 
-		g_string_append_printf (context->builder,
-		    "<menu id=\"openbox-%s\" label=\"%s\" icon=\"%s\">\n",
-		    dir_id, dir_name, dir_icon);
-		g_free (dir_icon);
-	}
-	else
+    if (!context->no_icons)
+        {
+            gchar *dir_icon = item_icon_path(MENU_CACHE_ITEM(dir));
+
+            g_string_append_printf(context->builder,
+                                   "<menu id=\"openbox-%s\" label=\"%s\" icon=\"%s\">\n",
+                                   dir_id, dir_name, dir_icon);
+            g_free(dir_icon);
+        }
+    else
 #endif
-	{
-		g_string_append_printf (context->builder,
-	      "<menu id=\"openbox-%s\" label=\"%s\">\n",
-	      dir_id, dir_name);
-	}
+        {
+            g_string_append_printf(context->builder,
+                                   "<menu id=\"openbox-%s\" label=\"%s\">\n",
+                                   dir_id, dir_name);
+        }
 
-	g_free (dir_id);
-	g_free (dir_name);
+    g_free(dir_id);
+    g_free(dir_name);
 }
 
-gchar* get_item_comment (MenuCacheItem*, gboolean);
+gchar *get_item_comment(MenuCacheItem*, gboolean);
 
-gchar*
-get_item_name (MenuCacheItem* item, gboolean alternate)
+gchar *
+get_item_name(MenuCacheItem* item, gboolean alternate)
 {
-   char* s = safe_name (menu_cache_item_get_name(item));
+    char *s = safe_name(menu_cache_item_get_name(item));
 
-   if (s == NULL && alternate == TRUE) {
-       return get_item_comment(item, FALSE);
-   }
+    if (s == NULL && alternate == TRUE)
+        {
+            return get_item_comment(item, FALSE);
+        }
 
-   return s;
+    return s;
 }
 
 
-gchar*
-get_item_comment (MenuCacheItem* item, gboolean alternate)
+gchar *
+get_item_comment(MenuCacheItem* item, gboolean alternate)
 {
-   char* s = safe_name (menu_cache_item_get_comment(item));
+    char *s = safe_name(menu_cache_item_get_comment(item));
 
-   if (s == NULL && alternate == TRUE) {
-       return get_item_name(item, FALSE);
-   }
+    if (s == NULL && alternate == TRUE)
+        {
+            return get_item_name(item, FALSE);
+        }
 
-   return s;
+    return s;
 }
 
 
@@ -92,56 +95,59 @@ get_item_comment (MenuCacheItem* item, gboolean alternate)
  *   create a menu entry for an application.
  ****/
 void
-menu_application (MenuCacheApp *app, OB_Menu *context)
+menu_application(MenuCacheApp *app, OB_Menu *context)
 {
-	gchar *exec_name = NULL;
-	gchar *exec_icon = NULL;
-	gchar *exec_cmd = NULL;
+    gchar *exec_name = NULL;
+    gchar *exec_icon = NULL;
+    gchar *exec_cmd = NULL;
 
-	/* is comment (description) or name displayed ? */
-	exec_name = (context->comment == TRUE) ?
-        get_item_comment (MENU_CACHE_ITEM(app), TRUE) : get_item_name (MENU_CACHE_ITEM(app), TRUE);
+    /* is comment (description) or name displayed ? */
+    exec_name = (context->comment == TRUE) ?
+                get_item_comment(MENU_CACHE_ITEM(app), TRUE) : get_item_name(MENU_CACHE_ITEM(app), TRUE);
 
-	exec_cmd = clean_exec (app);
-	// make sure we don't process item with no exec value (issue #13). This should never happend.
-	if (exec_cmd == NULL){
-		return;
-	}
+    exec_cmd = clean_exec(app);
+
+    // make sure we don't process item with no exec value (issue #13). This should never happend.
+    if (exec_cmd == NULL)
+        {
+            return;
+        }
 
 #ifdef WITH_ICONS
-	if (!context->no_icons)
-	{
-		exec_icon = item_icon_path (MENU_CACHE_ITEM(app));
-		g_string_append_printf (context->builder,
-	      "<item label=\"%s\" icon=\"%s\"><action name=\"Execute\">",
-	      exec_name,
-	      exec_icon);
-	}
-	else
+
+    if (!context->no_icons)
+        {
+            exec_icon = item_icon_path(MENU_CACHE_ITEM(app));
+            g_string_append_printf(context->builder,
+                                   "<item label=\"%s\" icon=\"%s\"><action name=\"Execute\">",
+                                   exec_name,
+                                   exec_icon);
+        }
+    else
 #endif
-	{
-		g_string_append_printf (context->builder,
-	      "<item label=\"%s\"><action name=\"Execute\">",
-	      exec_name);
-	}
+        {
+            g_string_append_printf(context->builder,
+                                   "<item label=\"%s\"><action name=\"Execute\">",
+                                   exec_name);
+        }
 
-	if (context->sn && menu_cache_app_get_use_sn (app))
-		g_string_append (context->builder,
-	        "<startupnotify><enabled>yes</enabled></startupnotify>");
+    if (context->sn && menu_cache_app_get_use_sn(app))
+        g_string_append(context->builder,
+                        "<startupnotify><enabled>yes</enabled></startupnotify>");
 
-	if (menu_cache_app_get_use_terminal (app))
-		g_string_append_printf (context->builder,
-	        "<command><![CDATA[%s %s]]></command>\n</action></item>\n",
-	        context->terminal_cmd,
-	        exec_cmd);
-	else
-		g_string_append_printf (context->builder,
-	        "<command><![CDATA[%s]]></command>\n</action></item>\n",
-	        exec_cmd);
+    if (menu_cache_app_get_use_terminal(app))
+        g_string_append_printf(context->builder,
+                               "<command><![CDATA[%s %s]]></command>\n</action></item>\n",
+                               context->terminal_cmd,
+                               exec_cmd);
+    else
+        g_string_append_printf(context->builder,
+                               "<command><![CDATA[%s]]></command>\n</action></item>\n",
+                               exec_cmd);
 
-	g_free (exec_name);
-	g_free (exec_icon);
-	g_free (exec_cmd);
+    g_free(exec_name);
+    g_free(exec_icon);
+    g_free(exec_cmd);
 }
 
 /****f* ob_display/menu_generate
@@ -152,27 +158,27 @@ menu_application (MenuCacheApp *app, OB_Menu *context)
  *   It calls itself when 'dir' type is MENU_CACHE_TYPE_DIR.
  ****/
 void
-menu_generate (MenuCacheDir *dir, OB_Menu *context)
+menu_generate(MenuCacheDir *dir, OB_Menu *context)
 {
-	GSList *l = NULL;
+    GSList *l = NULL;
 
-	for (l = menu_cache_dir_get_children (dir); l; l = l->next)
-		switch ((guint) menu_cache_item_get_type (MENU_CACHE_ITEM(l->data)))
-		{
-			case MENU_CACHE_TYPE_DIR:
-				menu_directory (l->data, context);
-				menu_generate (MENU_CACHE_DIR(l->data), context);
-				g_string_append (context->builder, "</menu>\n");
-				break;
+    for (l = menu_cache_dir_get_children(dir); l; l = l->next)
+        switch ((guint) menu_cache_item_get_type(MENU_CACHE_ITEM(l->data)))
+            {
+            case MENU_CACHE_TYPE_DIR:
+                menu_directory(l->data, context);
+                menu_generate(MENU_CACHE_DIR(l->data), context);
+                g_string_append(context->builder, "</menu>\n");
+                break;
 
-			case MENU_CACHE_TYPE_SEP:
-				g_string_append (context->builder, "<separator />\n");
-				break;
+            case MENU_CACHE_TYPE_SEP:
+                g_string_append(context->builder, "<separator />\n");
+                break;
 
-			case MENU_CACHE_TYPE_APP:
-				if (app_is_visible (MENU_CACHE_APP(l->data), context->show_flag))
-					menu_application (l->data, context);
-		}
+            case MENU_CACHE_TYPE_APP:
+                if (app_is_visible(MENU_CACHE_APP(l->data), context->show_flag))
+                    menu_application(l->data, context);
+            }
 }
 
 
@@ -187,21 +193,22 @@ menu_generate (MenuCacheDir *dir, OB_Menu *context)
  * RETURN VALUE
  *   * a pointer to an array of strings that needs to be freed with g_strfreev.
  ****/
-gchar **get_header_footer_from_template (gchar *template)
+gchar **get_header_footer_from_template(gchar *template)
 {
-	gchar *content = NULL;
-	gchar **tokens = NULL;
+    gchar *content = NULL;
+    gchar **tokens = NULL;
 
-	if (template && g_file_get_contents (template, &content, NULL, NULL))
-	{
-		tokens = g_strsplit (content, "%MENU%", 2);
-		g_free (content);
-	}
-	else
-	{
-		tokens = g_strsplit (default_template, "%MENU%", 2);
-	}
-	return tokens;
+    if (template && g_file_get_contents(template, &content, NULL, NULL))
+        {
+            tokens = g_strsplit(content, "%MENU%", 2);
+            g_free(content);
+        }
+    else
+        {
+            tokens = g_strsplit(default_template, "%MENU%", 2);
+        }
+
+    return tokens;
 }
 
 /****f* ob_display/menu_display
@@ -226,57 +233,59 @@ gchar **get_header_footer_from_template (gchar *template)
  *   I don't have a lot of applications installed.
  ****/
 void
-menu_display (MenuCache *menu, OB_Menu *context)
+menu_display(MenuCache *menu, OB_Menu *context)
 {
-	gchar **template_parts = NULL;
+    gchar **template_parts = NULL;
 
-	MenuCacheDir *dir = menu_cache_dup_root_dir (menu);
-	if (G_UNLIKELY(dir == NULL))
-	{
-		g_warning ("Can't get menu root directory");
-		context->code = MENU_DIR_ERROR;
-		return;
-	}
+    MenuCacheDir *dir = menu_cache_dup_root_dir(menu);
 
-	// Desktops are dynamically detected by menu_cache when reloading
-	// its cache. It is now time to add our desktop to the show_flag in
-	// the application context.
-	add_current_desktop_to_context (menu, context);
+    if (G_UNLIKELY(dir == NULL))
+        {
+            g_warning("Can't get menu root directory");
+            context->code = MENU_DIR_ERROR;
+            return;
+        }
 
-	GSList *l = menu_cache_dir_get_children (dir);
+    // Desktops are dynamically detected by menu_cache when reloading
+    // its cache. It is now time to add our desktop to the show_flag in
+    // the application context.
+    add_current_desktop_to_context(menu, context);
 
-	if (g_slist_length (l) != 0) {
-		context->builder = g_string_sized_new (16 * 1024);
+    GSList *l = menu_cache_dir_get_children(dir);
 
-		template_parts = get_header_footer_from_template (context->template);
-		// TODO: check if template_parts array contains 2 strings.
+    if (g_slist_length(l) != 0)
+        {
+            context->builder = g_string_sized_new(16 * 1024);
 
-		g_string_append (context->builder, template_parts[0]); // add header
-		menu_generate (dir, context);
-		g_string_append (context->builder, template_parts[1]); // add footer
+            template_parts = get_header_footer_from_template(context->template);
+            // TODO: check if template_parts array contains 2 strings.
 
-		g_strfreev (template_parts);
+            g_string_append(context->builder, template_parts[0]);  // add header
+            menu_generate(dir, context);
+            g_string_append(context->builder, template_parts[1]);  // add footer
 
-		gchar *buff = g_string_free (context->builder, FALSE);
+            g_strfreev(template_parts);
 
-		/* Has menu content to be saved in a file ? */
-		if (context->output)
-		{
-			if (!g_file_set_contents (context->output, buff, -1, NULL))
-				g_warning ("Can't write to %s\n", context->output);
-			else
-				g_message ("wrote to %s", context->output);
-		}
-		else /* No, so it's displayed on screen */
-			g_print ("%s", buff);
+            gchar *buff = g_string_free(context->builder, FALSE);
 
-		g_free (buff);
-	}
-	else
-	{
-		g_warning ("Menu seems to be empty. Check openbox-menu parameters.");
-		context->code = MENU_EMPTY_ERROR;
-	}
+            /* Has menu content to be saved in a file ? */
+            if (context->output)
+                {
+                    if (!g_file_set_contents(context->output, buff, -1, NULL))
+                        g_warning("Can't write to %s\n", context->output);
+                    else
+                        g_message("wrote to %s", context->output);
+                }
+            else   /* No, so it's displayed on screen */
+                g_print("%s", buff);
 
-	menu_cache_item_unref (MENU_CACHE_ITEM(dir));
+            g_free(buff);
+        }
+    else
+        {
+            g_warning("Menu seems to be empty. Check openbox-menu parameters.");
+            context->code = MENU_EMPTY_ERROR;
+        }
+
+    menu_cache_item_unref(MENU_CACHE_ITEM(dir));
 }
