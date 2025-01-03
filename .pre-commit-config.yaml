@@ -15,7 +15,7 @@ repos:
         name: Astyle C formatter
         entry: astyle
         language: system
-        files: \.(c)$
+        files: \.(c|h)$
         args:
           - --style=gnu
           - --indent=spaces=4
